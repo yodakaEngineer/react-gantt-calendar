@@ -1,5 +1,13 @@
 # ide
 .idea
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
 # dependencies
 /node_modules
@@ -11,9 +19,13 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+logs
+*.log
 
 # typescript
 *.tsbuildinfo
 
 # dist
-/dist
+dist
+dist-ssr
+*.local

@@ -5,5 +5,23 @@
   "exports": "./index.js",
   "repository": "git@github.com:yodakaEngineer/react-timeline.git",
   "author": "yodakaEngineer <engineeryodaka@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.15",
+    "@types/react-dom": "^18.0.6",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "@vitejs/plugin-react": "^2.0.0",
+    "typescript": "^4.6.4",
+    "vite": "^3.0.0"
+  }
 }
