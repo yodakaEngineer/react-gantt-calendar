@@ -24,6 +24,7 @@ logs
 
 # typescript
 *.tsbuildinfo
+/types
 
 # dist
 dist
