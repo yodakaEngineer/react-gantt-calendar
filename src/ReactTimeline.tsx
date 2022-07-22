@@ -1,6 +1,9 @@
+// FIXME: I wanna allow user opt in.
+import './styles.scss'
+
 export const ReactTimeline = () => {
   return (
-    <div>
+    <div className={'reactTimeline'}>
       hoge
     </div>
   )

@@ -1,5 +1,6 @@
 import { ComponentStory } from '@storybook/react'
 import { ReactTimeline } from './ReactTimeline'
+import './styles.scss'
 
 export default {
   component: ReactTimeline,
