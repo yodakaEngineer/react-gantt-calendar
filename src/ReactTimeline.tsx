@@ -22,13 +22,18 @@ type TableRow = {
   tableData: RowContent
 }
 
+type Column = {
+  label: string | React.ReactNode
+}
+
 type Props = {
+  columns: Column[]
   rowHeads: RowHead[]
   rowContents: RowContent[]
 }
 
 export const ReactTimeline = (props: Props) => {
-  const { rowContents } = props
+  const { rowContents, columns } = props
 
   const rowHeads = useMemo(() => {
     const recursiveRowSpans = (head: RowHead) => {
@@ -70,6 +75,9 @@ export const ReactTimeline = (props: Props) => {
   return (
     <table className={'reactTimeline'}>
       <thead>
+      <tr>
+        {columns.map(column => (<th>{column.label}</th>))}
+      </tr>
       </thead>
       <tbody>
       {

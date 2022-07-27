@@ -8,6 +8,17 @@ export default {
 }
 
 const args = {
+  columns: [
+    {
+      label: 'Hotel',
+    },
+    {
+      label: 'Floor',
+    },
+    {
+      label: 'Room',
+    },
+  ],
   rowHeads: [
     {
       id: '1',
