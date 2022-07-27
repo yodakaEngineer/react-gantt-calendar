@@ -73,9 +73,9 @@ export const ReactTimeline = (props: Props) => {
       </thead>
       <tbody>
       {
-        tableRows.map(row => (
-          <tr>
-            {row.tableHeads.map(head => (<th rowSpan={head.rowSpan}>{head.label}</th>))}
+        tableRows.map((row, index) => (
+          <tr key={'RTLTR_' + index}>
+            {row.tableHeads.map(head => (<th key={'RTLTH_' + head.id} rowSpan={head.rowSpan}>{head.label}</th>))}
             <td>{row.tableData.label}</td>
           </tr>
         ))
