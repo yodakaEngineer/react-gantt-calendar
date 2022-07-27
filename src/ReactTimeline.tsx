@@ -1,6 +1,7 @@
 // FIXME: I wanna allow user opt in.
 import './styles.scss'
 import React, { useMemo } from 'react'
+import dayjs from 'dayjs'
 
 type RowHead = {
   id: string | number
@@ -30,10 +31,19 @@ type Props = {
   columns: Column[]
   rowHeads: RowHead[]
   rowContents: RowContent[]
+  startDate?: Date
+  displayRangeNumber?: number
+  displayRangeUnit?: 'day' | 'week' | 'month' | 'year'
+  dateColumnFormat?: string
 }
 
 export const ReactTimeline = (props: Props) => {
   const { rowContents, columns } = props
+  const startDate = dayjs(props.startDate)
+  const displayRangeNumber = props.displayRangeNumber ?? 31
+  const displayRange = [...Array(displayRangeNumber)].map((_, i) => i)
+  const displayRangeUnit = props.displayRangeUnit ?? 'day'
+  const dateColumnFormat = props.dateColumnFormat ?? 'MM/DD'
 
   const rowHeads = useMemo(() => {
     const recursiveRowSpans = (head: RowHead) => {
@@ -77,6 +87,14 @@ export const ReactTimeline = (props: Props) => {
       <thead>
       <tr>
         {columns.map(column => (<th>{column.label}</th>))}
+        {displayRange.map(unit => {
+          const date = startDate.add(unit, displayRangeUnit)
+          return (
+            <td key={'RTLDR_' + unit}>
+              {date.format(dateColumnFormat)}
+            </td>
+          )
+        })}
       </tr>
       </thead>
       <tbody>
