@@ -1,6 +1,6 @@
 // FIXME: I wanna allow user opt in.
 import './styles.scss'
-import React from 'react'
+import React, { useMemo } from 'react'
 
 type RowHead = {
   id: string | number
@@ -29,42 +29,43 @@ type Props = {
 
 export const ReactTimeline = (props: Props) => {
   const { rowContents } = props
-  const recursiveRowSpans = (head: RowHead) => {
-    if (head.childRowHeads) {
-      head.childRowHeads = head.childRowHeads.map(recursiveRowSpans)
+
+  const rowHeads = useMemo(() => {
+    const recursiveRowSpans = (head: RowHead) => {
+      if (head.childRowHeads) {
+        head.childRowHeads = head.childRowHeads.map(recursiveRowSpans)
+      }
+      head.rowSpan = rowContents
+        .filter(content => content.headIds.includes(head.id))
+        .length
+      return head
     }
-    head.rowSpan = rowContents
-      .filter(content => content.headIds.includes(head.id))
-      .length
-    return head
-  }
-  const rowHeads = props.rowHeads.map(recursiveRowSpans)
+    return props.rowHeads.map(recursiveRowSpans)
+  }, [props.rowHeads, rowContents])
+
   const renderedHeadIds: RowHead['id'][] = []
-  const tableRows: TableRow[] = rowContents.map(content => {
-    const row: TableRow = {
-      tableHeads: [],
-      tableData: content,
-    }
-    rowHeads.forEach(head => {
+  const tableRows: TableRow[] = useMemo(() => {
+    const recursiveMakeTableRows = (content: RowContent, head: RowHead, renderedHeadIds: RowHead['id'][], row: TableRow) => {
       if (content.headIds.includes(head.id)) {
         if (!renderedHeadIds.includes(head.id)) {
           row.tableHeads.push(head)
           renderedHeadIds.push(head.id)
         }
         if (head.childRowHeads) {
-          head.childRowHeads.forEach(childHead => {
-            if (content.headIds.includes(childHead.id)) {
-              if (!renderedHeadIds.includes(childHead.id)) {
-                row.tableHeads.push(childHead)
-                renderedHeadIds.push(childHead.id)
-              }
-            }
-          })
+          head.childRowHeads.forEach(childHead => { recursiveMakeTableRows(content, childHead, renderedHeadIds, row) })
         }
       }
+      return row
+    }
+    return rowContents.map(content => {
+      const row: TableRow = {
+        tableHeads: [],
+        tableData: content,
+      }
+      rowHeads.forEach(head => { recursiveMakeTableRows(content, head, renderedHeadIds, row) })
+      return row
     })
-    return row
-  })
+  }, [rowContents, rowHeads, renderedHeadIds])
 
   return (
     <table className={'reactTimeline'}>
