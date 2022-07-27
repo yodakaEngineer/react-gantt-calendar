@@ -83,14 +83,14 @@ export const ReactTimeline = (props: Props) => {
   }, [rowContents, rowHeads, renderedHeadIds])
 
   return (
-    <table className={'reactTimeline'}>
-      <thead>
-      <tr>
-        {columns.map(column => (<th>{column.label}</th>))}
+    <table className={'RTL'}>
+      <thead className={'RTLThead'}>
+      <tr className={'RTLTheadTr'}>
+        {columns.map(column => (<th className={'RTLTheadTr__th'}>{column.label}</th>))}
         {displayRange.map(unit => {
           const date = startDate.add(unit, displayRangeUnit)
           return (
-            <td key={'RTLDR_' + unit}>
+            <td key={'RTLDR_' + unit} className={'RTLTheadTr__td'}>
               {date.format(dateColumnFormat)}
             </td>
           )
@@ -101,8 +101,8 @@ export const ReactTimeline = (props: Props) => {
       {
         tableRows.map((row, index) => (
           <tr key={'RTLTR_' + index}>
-            {row.tableHeads.map(head => (<th key={'RTLTH_' + head.id} rowSpan={head.rowSpan}>{head.label}</th>))}
-            <td>{row.tableData.label}</td>
+            {row.tableHeads.map(head => (<th key={'RTLTH_' + head.id} rowSpan={head.rowSpan} className={'RTLTbodyTr__th'}>{head.label}</th>))}
+            <td className={'RTLTbodyTr__td'}>{row.tableData.label}</td>
           </tr>
         ))
       }

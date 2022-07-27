@@ -1,3 +1,31 @@
-.reactTimeline {
+.RTL {
+  border: 1px solid red;
   color: red;
+
+  &TheadTr {
+    &__td,&__th {
+      padding: 0.4rem;
+    }
+    &__td:not(:last-child) {
+      border-right: 1px solid red;
+      border-bottom: 1px solid red;
+    }
+    &__th:not(:last-child) {
+      border-right: 1px solid red;
+      border-bottom: 1px solid red;
+    }
+  }
+  &TbodyTr {
+    &__td,&__th {
+      padding: 0.4rem;
+    }
+    &__td:not(:last-child) {
+      border-right: 1px solid red;
+      border-top: 1px solid red;
+    }
+    &__th:not(:last-child) {
+      border-right: 1px solid red;
+      border-top: 1px solid red;
+    }
+  }
 }
