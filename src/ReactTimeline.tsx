@@ -1,6 +1,6 @@
 // FIXME: I wanna allow user opt in.
 import './styles.scss'
-import React, { useMemo } from 'react'
+import React, {useEffect, useMemo, useRef, useState} from 'react'
 import dayjs from 'dayjs'
 
 type RowHead = {
@@ -45,6 +45,8 @@ export const ReactTimeline = (props: Props) => {
   const displayRangeUnit = props.displayRangeUnit ?? 'day'
   const dateColumnFormat = props.dateColumnFormat ?? 'MM/DD'
 
+  const targetRef = useRef(null)
+  const [lastHeadLeft, setLastHeadLeft] = useState(0)
   const rowHeads = useMemo(() => {
     const recursiveRowSpans = (head: RowHead) => {
       if (head.childRowHeads) {
@@ -82,6 +84,14 @@ export const ReactTimeline = (props: Props) => {
     })
   }, [rowContents, rowHeads, renderedHeadIds])
 
+  useEffect(() => {
+    if (targetRef.current == null) return
+    const target: HTMLElement = targetRef.current
+    const targetLeftPosition = target.offsetLeft ?? 0
+    const targetWidth = target.offsetWidth ?? 0
+    setLastHeadLeft(targetLeftPosition + targetWidth)
+  }, [setLastHeadLeft, targetRef])
+
   return (
     <table className={'RTL'}>
       <thead className={'RTLThead'}>
@@ -100,9 +110,20 @@ export const ReactTimeline = (props: Props) => {
       <tbody>
       {
         tableRows.map((row, index) => (
-          <tr key={'RTLTR_' + index}>
-            {row.tableHeads.map(head => (<th key={'RTLTH_' + head.id} rowSpan={head.rowSpan} className={'RTLTbodyTr__th'}>{head.label}</th>))}
-            <td className={'RTLTbodyTr__td'}>{row.tableData.label}</td>
+          <tr key={'RTLTR_' + index} className={'RTLTBodyTrTd'}>
+            {row.tableHeads.map((head, headIndex, heads) => {
+              return (
+                <th key={'RTLTH_' + head.id}
+                    rowSpan={head.rowSpan}
+                    className={'RTLTbodyTr__th'}
+                    ref={headIndex === heads.length - 1 ? targetRef : undefined}
+                >
+                  {head.label}
+                </th>
+              )
+            })}
+            {displayRange.map(unit => <td key={'RTLDR_' + unit} className={'RTLTbodyTr__td'} />)}
+            <div className={'RTLcontent'} style={{ left: lastHeadLeft }}>{row.tableData.label}</div>
           </tr>
         ))
       }
