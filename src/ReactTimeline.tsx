@@ -1,7 +1,10 @@
 // FIXME: I wanna allow user opt in.
 import './styles.scss'
-import React, {useEffect, useMemo, useRef, useState} from 'react'
+import React, {createRef, RefObject, useEffect, useMemo, useRef, useState} from 'react'
 import dayjs from 'dayjs'
+import isBetween from 'dayjs/plugin/isBetween'
+
+dayjs.extend(isBetween)
 
 type RowHead = {
   id: string | number
@@ -45,7 +48,7 @@ export const ReactTimeline = (props: Props) => {
   const displayRangeUnit = props.displayRangeUnit ?? 'day'
   const dateColumnFormat = props.dateColumnFormat ?? 'MM/DD'
 
-  const targetRef = useRef(null)
+  const thTargetRef = useRef(null)
   const [lastHeadLeft, setLastHeadLeft] = useState(0)
   const rowHeads = useMemo(() => {
     const recursiveRowSpans = (head: RowHead) => {
@@ -84,13 +87,24 @@ export const ReactTimeline = (props: Props) => {
     })
   }, [rowContents, rowHeads, renderedHeadIds])
 
+  const dateRefs = useRef<RefObject<HTMLTableDataCellElement>[]>(tableRows.map(() => createRef()))
+  const calculateTableDataLeftPosition = ({ index }: { index: number }) => {
+    const startPosition = dateRefs.current[index]?.current?.offsetLeft ?? 0
+    return lastHeadLeft + startPosition
+  }
+  const isScheduleStartPosition = (unit: number, date: Date): boolean => {
+    const current = startDate.add(unit, displayRangeUnit)
+    const next = current.add(unit, displayRangeUnit)
+    return dayjs(date).isBetween(current, next)
+  }
+
   useEffect(() => {
-    if (targetRef.current == null) return
-    const target: HTMLElement = targetRef.current
+    if (thTargetRef.current == null) return
+    const target: HTMLElement = thTargetRef.current
     const targetLeftPosition = target.offsetLeft ?? 0
-    const targetWidth = target.offsetWidth ?? 0
+    const targetWidth = target.getBoundingClientRect().width ?? 0
     setLastHeadLeft(targetLeftPosition + targetWidth)
-  }, [setLastHeadLeft, targetRef])
+  }, [setLastHeadLeft, thTargetRef])
 
   return (
     <table className={'RTL'}>
@@ -116,14 +130,22 @@ export const ReactTimeline = (props: Props) => {
                 <th key={'RTLTH_' + head.id}
                     rowSpan={head.rowSpan}
                     className={'RTLTbodyTr__th'}
-                    ref={headIndex === heads.length - 1 ? targetRef : undefined}
+                    ref={headIndex === heads.length - 1 ? thTargetRef : undefined}
                 >
                   {head.label}
                 </th>
               )
             })}
-            {displayRange.map(unit => <td key={'RTLDR_' + unit} className={'RTLTbodyTr__td'} />)}
-            <div className={'RTLcontent'} style={{ left: lastHeadLeft }}>{row.tableData.label}</div>
+            {displayRange.map((unit) => (
+              <td
+                key={'RTLDR_' + unit}
+                className={'RTLTbodyTr__td'}
+                ref={isScheduleStartPosition(unit, row.tableData.startAt) ? dateRefs.current[index] : undefined}
+              />
+            ))}
+            <td className={'RTLcontent'} style={{ left: calculateTableDataLeftPosition({ index }) }}>
+              {row.tableData.label}
+            </td>
           </tr>
         ))
       }

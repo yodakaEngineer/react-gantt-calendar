@@ -63,20 +63,20 @@ const args = {
     {
       headIds: ['1', '1-1', '1-1-1'],
       label: 'Cleaning1',
-      startAt: new Date('2020-01-01'),
-      endAt: new Date('2020-01-02'),
+      startAt: new Date('2022-08-01'),
+      endAt: new Date('2022-08-02'),
     },
     {
       headIds: ['1', '1-1', '1-1-2'],
       label: 'Cleaning2',
-      startAt: new Date('2020-01-01'),
-      endAt: new Date('2020-01-02'),
+      startAt: new Date('2022-08-16'),
+      endAt: new Date('2022-08-18'),
     },
     {
       headIds: ['1', '1-2', '1-2-1'],
       label: 'Cleaning3',
-      startAt: new Date('2020-01-01'),
-      endAt: new Date('2020-01-02'),
+      startAt: new Date('2022-08-01'),
+      endAt: new Date('2022-08-02'),
     },
   ]
 }
