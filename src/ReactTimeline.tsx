@@ -9,7 +9,6 @@ dayjs.extend(isBetween)
 type RowHead = {
   id: string | number
   label: string | React.ReactNode
-  onClick?: (row: RowHead) => void
   childRowHeads?: RowHead[]
   rowSpan?: number
 }
