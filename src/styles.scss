@@ -6,11 +6,11 @@
     &__td,&__th {
       padding: 0.4rem;
     }
-    &__td:not(:last-child) {
+    &__td {
       border-right: 1px solid red;
       border-bottom: 1px solid red;
     }
-    &__th:not(:last-child) {
+    &__th {
       border-right: 1px solid red;
       border-bottom: 1px solid red;
     }
@@ -19,11 +19,11 @@
     &__td,&__th {
       padding: 0.4rem;
     }
-    &__td:not(:last-child) {
+    &__td {
       border-right: 1px solid red;
       border-top: 1px solid red;
     }
-    &__th:not(:last-child) {
+    &__th {
       border-right: 1px solid red;
       border-top: 1px solid red;
     }
