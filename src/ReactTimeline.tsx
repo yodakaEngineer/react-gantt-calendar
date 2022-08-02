@@ -1,6 +1,6 @@
 // FIXME: I wanna allow user opt in.
 import './styles.scss'
-import React, {createRef, RefObject, useEffect, useMemo, useRef, useState} from 'react'
+import React, {createRef, RefObject, useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import dayjs from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
 
@@ -93,16 +93,22 @@ export const ReactTimeline = (props: Props) => {
   const dateRefs = useRef<RefObject<HTMLTableDataCellElement>[][]>(rowContents.map(v => {
     return v.events.map(() => createRef<HTMLTableDataCellElement>())
   }))
-  const calculateTableDataLeftPosition = ({ index, eventIndex }: { index: number, eventIndex: number }) => {
-    const startPosition = dateRefs.current[index][eventIndex]?.current?.offsetLeft ?? 0
-    return lastHeadLeft + startPosition
-  }
-  const isScheduleStartPosition = (index: number, unit: number, content: RowContent) => {
-    const current = startDate.add(unit, displayRangeUnit)
-    const next = current.add(unit, displayRangeUnit)
-    const refIndex = content.events.findIndex(event => dayjs(event.startAt).isBetween(current, next))
-    return refIndex === -1 ? undefined : dateRefs.current[index][refIndex]
-  }
+  const calculateTableDataLeftPosition = useCallback(
+    ({ index, eventIndex }: { index: number, eventIndex: number }) => {
+      const startPosition = dateRefs.current[index][eventIndex]?.current?.offsetLeft ?? 0
+      return lastHeadLeft + startPosition
+    },
+    [dateRefs, lastHeadLeft]
+  )
+  const isScheduleStartPosition = useCallback(
+    (index: number, unit: number, content: RowContent) => {
+      const current = startDate.add(unit, displayRangeUnit)
+      const next = current.add(unit, displayRangeUnit)
+      const refIndex = content.events.findIndex(event => dayjs(event.startAt).isBetween(current, next))
+      return refIndex === -1 ? undefined : dateRefs.current[index][refIndex]
+    },
+    [startDate, displayRangeUnit, dateRefs]
+  )
 
   useEffect(() => {
     if (thTargetRef.current == null) return
