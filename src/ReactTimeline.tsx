@@ -122,7 +122,7 @@ export const ReactTimeline = (props: Props) => {
     <table className={'RTL'}>
       <thead className={'RTLThead'}>
       <tr className={'RTLTheadTr'}>
-        {columns.map(column => (<th className={'RTLTheadTr__th'}>{column.label}</th>))}
+        {columns.map((column, index) => (<th className={'RTLTheadTr__th'} key={`RTLTheadTr__th_${index}`}>{column.label}</th>))}
         {displayRange.map(unit => {
           const date = startDate.add(unit, displayRangeUnit)
           return (
@@ -157,7 +157,11 @@ export const ReactTimeline = (props: Props) => {
             ))}
             {
               row.tableContent.events.map((event, eventIndex) => (
-                <td className={'RTLevent'} style={{ left: calculateTableDataLeftPosition({ index, eventIndex }) }}>
+                <td
+                  key={`RTLevent_${eventIndex}`}
+                  className={'RTLevent'}
+                  style={{ left: calculateTableDataLeftPosition({ index, eventIndex }) }}
+                >
                   {event.label}
                 </td>
               ))
