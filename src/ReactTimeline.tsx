@@ -45,13 +45,18 @@ type Props = {
 }
 
 export const ReactTimeline = (props: Props) => {
-  const { rowContents, columns } = props
+  const { columns } = props
   const startDate = dayjs(props.startDate)
   const displayRangeNumber = props.displayRangeNumber ?? 31
   const displayRangeUnitNumber = props.displayRangeUnitNumber ?? 1
   const displayRange = [...Array(displayRangeNumber)].map((_, i) => i * displayRangeUnitNumber)
   const displayRangeUnit = props.displayRangeUnit ?? 'day'
   const dateColumnFormat = props.dateColumnFormat ?? 'MM/DD'
+  const endDate = startDate.add(displayRangeNumber * displayRangeUnitNumber, displayRangeUnit)
+  const rowContents = props.rowContents.map(content => {
+    content.events = content.events.filter(event => dayjs(event.startAt).isBetween(startDate, endDate, displayRangeUnit, '[]'))
+    return content
+  })
 
   const thTargetRef = useRef(null)
   const [lastHeadLeft, setLastHeadLeft] = useState(0)
