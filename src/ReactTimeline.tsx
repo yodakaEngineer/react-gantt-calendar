@@ -1,7 +1,7 @@
 // FIXME: I wanna allow user opt in.
 import './styles.scss'
 import React, {createRef, RefObject, useCallback, useEffect, useMemo, useRef, useState} from 'react'
-import dayjs from 'dayjs'
+import dayjs, {ManipulateType} from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
 
 dayjs.extend(isBetween)
@@ -39,7 +39,7 @@ type Props = {
   rowContents: RowContent[]
   startDate?: Date
   displayRangeNumber?: number
-  displayRangeUnit?: 'day' | 'week' | 'month' | 'year'
+  displayRangeUnit?: ManipulateType
   dateColumnFormat?: string
 }
 
