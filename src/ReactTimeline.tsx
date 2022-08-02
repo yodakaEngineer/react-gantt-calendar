@@ -40,6 +40,7 @@ type Props = {
   startDate?: Date
   displayRangeNumber?: number
   displayRangeUnit?: ManipulateType
+  displayRangeUnitNumber?: number
   dateColumnFormat?: string
 }
 
@@ -47,7 +48,8 @@ export const ReactTimeline = (props: Props) => {
   const { rowContents, columns } = props
   const startDate = dayjs(props.startDate)
   const displayRangeNumber = props.displayRangeNumber ?? 31
-  const displayRange = [...Array(displayRangeNumber)].map((_, i) => i)
+  const displayRangeUnitNumber = props.displayRangeUnitNumber ?? 1
+  const displayRange = [...Array(displayRangeNumber)].map((_, i) => i * displayRangeUnitNumber)
   const displayRangeUnit = props.displayRangeUnit ?? 'day'
   const dateColumnFormat = props.dateColumnFormat ?? 'MM/DD'
 
@@ -104,7 +106,7 @@ export const ReactTimeline = (props: Props) => {
     (index: number, unit: number, content: RowContent) => {
       const current = startDate.add(unit, displayRangeUnit)
       const next = current.add(unit, displayRangeUnit)
-      const refIndex = content.events.findIndex(event => dayjs(event.startAt).isBetween(current, next))
+      const refIndex = content.events.findIndex(event => dayjs(event.startAt).isBetween(current, next, displayRangeUnit, '[)'))
       return refIndex === -1 ? undefined : dateRefs.current[index][refIndex]
     },
     [startDate, displayRangeUnit, dateRefs]
