@@ -62,21 +62,38 @@ const args = {
   rowContents: [
     {
       headIds: ['1', '1-1', '1-1-1'],
-      label: 'Cleaning1',
-      startAt: new Date('2022-08-01'),
-      endAt: new Date('2022-08-02'),
+      events: [
+        {
+          label: 'Cleaning1',
+          startAt: new Date('2022-08-01'),
+          endAt: new Date('2022-08-02'),
+        },
+      ]
     },
     {
       headIds: ['1', '1-1', '1-1-2'],
-      label: 'Cleaning2',
-      startAt: new Date('2022-08-16'),
-      endAt: new Date('2022-08-18'),
+      events: [
+        {
+          label: 'Cleaning2',
+          startAt: new Date('2022-08-16'),
+          endAt: new Date('2022-08-18'),
+        },
+        {
+          label: 'Cleaning4',
+          startAt: new Date('2022-08-07'),
+          endAt: new Date('2022-08-08'),
+        }
+      ]
     },
     {
       headIds: ['1', '1-2', '1-2-1'],
-      label: 'Cleaning3',
-      startAt: new Date('2022-08-01'),
-      endAt: new Date('2022-08-02'),
+      events: [
+        {
+          label: 'Cleaning3',
+          startAt: new Date('2022-08-01'),
+          endAt: new Date('2022-08-02'),
+        }
+      ]
     },
   ]
 }

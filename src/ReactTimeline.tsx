@@ -14,16 +14,20 @@ type RowHead = {
   rowSpan?: number
 }
 
-type RowContent = {
-  headIds: RowHead['id'][]
+type Event = {
   label: string | React.ReactNode
   startAt: Date
   endAt: Date
 }
 
+type RowContent = {
+  headIds: RowHead['id'][]
+  events: Event[]
+}
+
 type TableRow = {
   tableHeads: RowHead[]
-  tableData: RowContent
+  tableContent: RowContent
 }
 
 type Column = {
@@ -80,22 +84,25 @@ export const ReactTimeline = (props: Props) => {
     return rowContents.map(content => {
       const row: TableRow = {
         tableHeads: [],
-        tableData: content,
+        tableContent: content,
       }
       rowHeads.forEach(head => { recursiveMakeTableRows(content, head, renderedHeadIds, row) })
       return row
     })
   }, [rowContents, rowHeads, renderedHeadIds])
 
-  const dateRefs = useRef<RefObject<HTMLTableDataCellElement>[]>(tableRows.map(() => createRef()))
-  const calculateTableDataLeftPosition = ({ index }: { index: number }) => {
-    const startPosition = dateRefs.current[index]?.current?.offsetLeft ?? 0
+  const dateRefs = useRef<RefObject<HTMLTableDataCellElement>[][]>(rowContents.map(v => {
+    return v.events.map(() => createRef<HTMLTableDataCellElement>())
+  }))
+  const calculateTableDataLeftPosition = ({ index, eventIndex }: { index: number, eventIndex: number }) => {
+    const startPosition = dateRefs.current[index][eventIndex]?.current?.offsetLeft ?? 0
     return lastHeadLeft + startPosition
   }
-  const isScheduleStartPosition = (unit: number, date: Date): boolean => {
+  const isScheduleStartPosition = (index: number, unit: number, content: RowContent) => {
     const current = startDate.add(unit, displayRangeUnit)
     const next = current.add(unit, displayRangeUnit)
-    return dayjs(date).isBetween(current, next)
+    const refIndex = content.events.findIndex(event => dayjs(event.startAt).isBetween(current, next))
+    return refIndex === -1 ? undefined : dateRefs.current[index][refIndex]
   }
 
   useEffect(() => {
@@ -140,12 +147,16 @@ export const ReactTimeline = (props: Props) => {
               <td
                 key={'RTLDR_' + unit}
                 className={'RTLTbodyTr__td'}
-                ref={isScheduleStartPosition(unit, row.tableData.startAt) ? dateRefs.current[index] : undefined}
+                ref={isScheduleStartPosition(index, unit, row.tableContent)}
               />
             ))}
-            <td className={'RTLcontent'} style={{ left: calculateTableDataLeftPosition({ index }) }}>
-              {row.tableData.label}
-            </td>
+            {
+              row.tableContent.events.map((event, eventIndex) => (
+                <td className={'RTLevent'} style={{ left: calculateTableDataLeftPosition({ index, eventIndex }) }}>
+                  {event.label}
+                </td>
+              ))
+            }
           </tr>
         ))
       }
