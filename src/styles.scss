@@ -43,13 +43,8 @@ $waikawa-gray-900: #2c324e;
       border-top: 1px solid $waikawa-gray-400;
     }
   }
-  &TBodyTrTd {
-    position: relative;
-  }
   &event {
     background: $waikawa-gray-700;
     padding: 0.4rem;
-    position: absolute;
-    left: 0;
   }
 }
