@@ -1,13 +1,14 @@
 import {ModuleFormat} from 'rollup'
 
 import path from 'path'
+import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  esbuild: {
-    jsxInject: "import React from 'react'",
-  },
+  plugins: [react({
+    'jsxRuntime': 'classic',
+  })],
   build: {
     lib: {
       entry: path.resolve(__dirname, "src/main.ts"),
