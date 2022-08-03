@@ -1,17 +1,32 @@
+$waikawa-gray-50: #f5f6fa;
+$waikawa-gray-100: #eaebf4;
+$waikawa-gray-200: #d0d4e7;
+$waikawa-gray-300: #a6b0d3;
+$waikawa-gray-400: #7686ba;
+$waikawa-gray-500: #6374ae;
+$waikawa-gray-600: #414f88;
+$waikawa-gray-700: #36406e;
+$waikawa-gray-800: #30395c;
+$waikawa-gray-900: #2c324e;
+
 .RTL {
-  border: 1px solid;
+  color: $waikawa-gray-100;
+  font-size: small;
+  overflow: scroll;
+  box-shadow: 0 0 21px -6px rgba(0,0,0,0.6);
 
   &TheadTr {
+    background: $waikawa-gray-700;
     &__td,&__th {
       padding: 0.4rem;
     }
     &__td {
-      border-right: 1px solid;
-      border-bottom: 1px solid;
+      border-right: 1px solid $waikawa-gray-400;
+      border-bottom: 1px solid $waikawa-gray-400;
     }
     &__th {
-      border-right: 1px solid;
-      border-bottom: 1px solid;
+      border-right: 1px solid $waikawa-gray-400;
+      border-bottom: 1px solid $waikawa-gray-400;
     }
   }
   &TbodyTr {
@@ -19,18 +34,21 @@
       padding: 0.4rem;
     }
     &__td {
-      border-right: 1px solid;
-      border-top: 1px solid;
+      border-right: 1px solid $waikawa-gray-400;
+      border-top: 1px solid $waikawa-gray-400;
     }
     &__th {
-      border-right: 1px solid;
-      border-top: 1px solid;
+      background: $waikawa-gray-500;
+      border-right: 1px solid $waikawa-gray-400;
+      border-top: 1px solid $waikawa-gray-400;
     }
   }
   &TBodyTrTd {
     position: relative;
   }
   &event {
+    background: $waikawa-gray-700;
+    padding: 0.4rem;
     position: absolute;
     left: 0;
   }
