@@ -166,7 +166,7 @@ export const ReactGanttCalendar = (props: Props) => {
               row.tableContent.events.map((event, eventIndex) => (
                 <td
                   key={`RTLevent_${eventIndex}`}
-                  className={'RTLevent'}
+                  className={typeof event.label === 'string' ? 'RTLevent' : undefined}
                   style={{ left: calculateTableDataLeftPosition({ index, eventIndex }), position: 'absolute' }}
                 >
                   {event.label}

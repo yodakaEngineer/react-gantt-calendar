@@ -79,7 +79,7 @@ const args = {
           endAt: new Date('2022-08-18'),
         },
         {
-          label: 'Cleaning4',
+          label: <button>Cleaning4</button>,
           startAt: new Date('2022-08-07'),
           endAt: new Date('2022-08-08'),
         }
