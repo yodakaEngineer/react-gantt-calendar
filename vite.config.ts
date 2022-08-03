@@ -11,7 +11,7 @@ export default defineConfig({
   build: {
     lib: {
       entry: path.resolve(__dirname, "src/main.ts"),
-      name: "ReactTimeline",
+      name: "ReactGanttCalendar",
       fileName: (format: ModuleFormat) => `index.${format}.js`,
     },
     rollupOptions: {

@@ -44,7 +44,7 @@ type Props = {
   dateColumnFormat?: string
 }
 
-export const ReactTimeline = (props: Props) => {
+export const ReactGanttCalendar = (props: Props) => {
   const { columns } = props
   const startDate = dayjs(props.startDate)
   const displayRangeNumber = props.displayRangeNumber ?? 31
