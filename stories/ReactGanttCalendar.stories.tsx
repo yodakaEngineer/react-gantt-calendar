@@ -1,6 +1,6 @@
 import { ComponentStory } from '@storybook/react'
-import { ReactGanttCalendar } from './ReactGanttCalendar'
-import './styles.scss'
+import { ReactGanttCalendar } from '../src/ReactGanttCalendar'
+import '../src/styles.scss'
 
 export default {
   component: ReactGanttCalendar,
