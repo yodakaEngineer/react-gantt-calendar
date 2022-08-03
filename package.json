@@ -1,5 +1,5 @@
 {
-  "name": "react-timeline",
+  "name": "react-gantt-calendar",
   "type": "module",
   "version": "0.1.0",
   "types": "./types/main.d.ts",
@@ -13,7 +13,7 @@
     "import": "./dist/index.es.js",
     "require": "./dist/index.umd.js"
   },
-  "repository": "git@github.com:yodakaEngineer/react-timeline.git",
+  "repository": "git@github.com:yodakaEngineer/react-gantt-calendar.git",
   "author": "yodakaEngineer <engineeryodaka@gmail.com>",
   "license": "MIT",
   "scripts": {

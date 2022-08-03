@@ -1,10 +1,10 @@
 import { ComponentStory } from '@storybook/react'
-import { ReactTimeline } from './ReactTimeline'
+import { ReactGanttCalendar } from './ReactGanttCalendar'
 import './styles.scss'
 
 export default {
-  component: ReactTimeline,
-  title: 'ReactTimeline',
+  component: ReactGanttCalendar,
+  title: 'ReactGanttCalendar',
 }
 
 const args = {
@@ -98,7 +98,7 @@ const args = {
   ]
 }
 
-const Template: ComponentStory<typeof ReactTimeline> = () => <ReactTimeline {...args} />
+const Template: ComponentStory<typeof ReactGanttCalendar> = () => <ReactGanttCalendar {...args} />
 
 export const Default = Template.bind({})
 Default.args = {}

@@ -1,1 +1,1 @@
-export * from './ReactTimeline'
+export * from './ReactGanttCalendar'
