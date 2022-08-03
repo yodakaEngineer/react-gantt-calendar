@@ -10,8 +10,14 @@
   "main": "./dist/index.umd.js",
   "module": "./dist/index.es.js",
   "exports": {
-    "import": "./dist/index.es.js",
-    "require": "./dist/index.umd.js"
+    ".": {
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.umd.js"
+    },
+    "./dist/index.css": {
+      "import": "./dist/index.css",
+      "require": "./dist/index.css"
+    }
   },
   "repository": "git@github.com:yodakaEngineer/react-gantt-calendar.git",
   "author": "yodakaEngineer <engineeryodaka@gmail.com>",
