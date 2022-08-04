@@ -143,7 +143,7 @@ export const ReactGanttCalendar = (props: Props) => {
       <tbody>
       {
         tableRows.map((row, index) => (
-          <tr key={'RTLTR_' + index} className={'RTLTBodyTrTd'}>
+          <tr key={'RTLTR_' + index} style={{ position: 'relative' }}>
             {row.tableHeads.map((head, headIndex, heads) => {
               return (
                 <th key={'RTLTH_' + head.id}
@@ -166,8 +166,8 @@ export const ReactGanttCalendar = (props: Props) => {
               row.tableContent.events.map((event, eventIndex) => (
                 <td
                   key={`RTLevent_${eventIndex}`}
-                  className={'RTLevent'}
-                  style={{ left: calculateTableDataLeftPosition({ index, eventIndex }) }}
+                  className={typeof event.label === 'string' ? 'RTLevent' : undefined}
+                  style={{ left: calculateTableDataLeftPosition({ index, eventIndex }), position: 'absolute' }}
                 >
                   {event.label}
                 </td>
