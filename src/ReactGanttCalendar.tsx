@@ -110,7 +110,7 @@ export const ReactGanttCalendar = (props: Props) => {
   const isScheduleStartPosition = useCallback(
     (index: number, unit: number, content: RowContent) => {
       const current = startDate.add(unit, displayRangeUnit)
-      const next = current.add(unit, displayRangeUnit)
+      const next = current.add(1, displayRangeUnit)
       const refIndex = content.events.findIndex(event => dayjs(event.startAt).isBetween(current, next, displayRangeUnit, '[)'))
       return refIndex === -1 ? undefined : dateRefs.current[index][refIndex]
     },
