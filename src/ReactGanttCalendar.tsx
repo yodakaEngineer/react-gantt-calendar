@@ -58,8 +58,6 @@ export const ReactGanttCalendar = (props: Props) => {
     return content
   })
 
-  const thTargetRef = useRef(null)
-  const [lastHeadLeft, setLastHeadLeft] = useState(0)
   const rowHeads = useMemo(() => {
     const recursiveRowSpans = (head: RowHead) => {
       if (head.childRowHeads) {
@@ -100,13 +98,7 @@ export const ReactGanttCalendar = (props: Props) => {
   const dateRefs = useRef<RefObject<HTMLTableDataCellElement>[][]>(rowContents.map(v => {
     return v.events.map(() => createRef<HTMLTableDataCellElement>())
   }))
-  const calculateTableDataLeftPosition = useCallback(
-    ({ index, eventIndex }: { index: number, eventIndex: number }) => {
-      const startPosition = dateRefs.current[index][eventIndex]?.current?.offsetLeft ?? 0
-      return lastHeadLeft + startPosition
-    },
-    [dateRefs, lastHeadLeft]
-  )
+  const [eventStartPositions, setEventStartPositions] = useState<number[][]>([])
   const isScheduleStartPosition = useCallback(
     (index: number, unit: number, content: RowContent) => {
       const current = startDate.add(unit, displayRangeUnit)
@@ -116,14 +108,15 @@ export const ReactGanttCalendar = (props: Props) => {
     },
     [startDate, displayRangeUnit, dateRefs]
   )
-
+  // FIXME: Avoid to use useEffect.
   useEffect(() => {
-    if (thTargetRef.current == null) return
-    const target: HTMLElement = thTargetRef.current
-    const targetLeftPosition = target.offsetLeft ?? 0
-    const targetWidth = target.getBoundingClientRect().width ?? 0
-    setLastHeadLeft(targetLeftPosition + targetWidth)
-  }, [setLastHeadLeft, thTargetRef])
+    setEventStartPositions(tableRows.map((row, index) => {
+        return row.tableContent.events.map((event, eventIndex) => {
+          return dateRefs.current[index][eventIndex]?.current?.offsetLeft ?? 0
+        })
+      })
+    )
+  },[])
 
   return (
     <table className={'RTL'}>
@@ -144,12 +137,11 @@ export const ReactGanttCalendar = (props: Props) => {
       {
         tableRows.map((row, index) => (
           <tr key={'RTLTR_' + index} style={{ position: 'relative' }}>
-            {row.tableHeads.map((head, headIndex, heads) => {
+            {row.tableHeads.map((head) => {
               return (
                 <th key={'RTLTH_' + head.id}
                     rowSpan={head.rowSpan}
                     className={'RTLTbodyTr__th'}
-                    ref={headIndex === heads.length - 1 ? thTargetRef : undefined}
                 >
                   {head.label}
                 </th>
@@ -167,7 +159,7 @@ export const ReactGanttCalendar = (props: Props) => {
                 <td
                   key={`RTLevent_${eventIndex}`}
                   className={typeof event.label === 'string' ? 'RTLevent' : undefined}
-                  style={{ left: calculateTableDataLeftPosition({ index, eventIndex }), position: 'absolute' }}
+                  style={{ left: eventStartPositions.length !== 0 ? eventStartPositions[index][eventIndex] : 0, position: 'absolute' }}
                 >
                   {event.label}
                 </td>
