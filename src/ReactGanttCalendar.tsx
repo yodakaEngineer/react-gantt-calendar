@@ -3,6 +3,7 @@ import './styles.scss'
 import React, {createRef, RefObject, useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import dayjs, {ManipulateType} from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
+import produce from 'immer'
 
 dayjs.extend(isBetween)
 
@@ -53,9 +54,15 @@ export const ReactGanttCalendar = (props: Props) => {
   const displayRangeUnit = props.displayRangeUnit ?? 'day'
   const dateColumnFormat = props.dateColumnFormat ?? 'MM/DD'
   const endDate = startDate.add(displayRangeNumber * displayRangeUnitNumber, displayRangeUnit)
-  const rowContents = props.rowContents.map(content => {
-    content.events = content.events.filter(event => dayjs(event.startAt).isBetween(startDate, endDate, displayRangeUnit, '[]'))
-    return content
+  const rowContents = produce(props.rowContents, (draft) => {
+    draft.forEach(content => {
+      content.events = content.events.filter(event => dayjs(event.startAt).isBetween(startDate, endDate, displayRangeUnit, '[]'))
+      const headIds: RowHead['id'][] = []
+      content.headIds.forEach((v, i) => {
+        headIds.push(i !== 0 ? `${headIds[i-1]}_${v}` : v)
+      })
+      content.headIds = headIds
+    })
   })
 
   const rowHeads = useMemo(() => {
@@ -68,7 +75,19 @@ export const ReactGanttCalendar = (props: Props) => {
         .length
       return head
     }
-    return props.rowHeads.map(recursiveRowSpans)
+    const recursiveAddPrefixToHeadId = (head: RowHead, parentHead?: RowHead) => {
+      if (parentHead?.id) {
+        head.id = `${parentHead.id}_${head.id}`
+      }
+      if (head.childRowHeads) {
+        head.childRowHeads = head.childRowHeads.map(v => recursiveAddPrefixToHeadId(v, head))
+      }
+      return head
+    }
+    return produce(props.rowHeads, (draft) => {
+      draft.forEach(v => recursiveAddPrefixToHeadId(v))
+      draft.forEach(recursiveRowSpans)
+    })
   }, [props.rowHeads, rowContents])
 
   const renderedHeadIds: RowHead['id'][] = []
