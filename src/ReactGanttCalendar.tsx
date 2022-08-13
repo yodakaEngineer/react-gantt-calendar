@@ -64,7 +64,7 @@ export const ReactGanttCalendar = (props: Props) => {
         })
         content.headIds = headIds
       })
-    }), [props.rowContents, displayRangeUnit])
+    }), [props.rowContents, displayRangeUnit, startDate, endDate])
 
   const rowHeads = useMemo(() => {
     const recursiveRowSpans = (head: RowHead) => {
