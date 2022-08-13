@@ -47,12 +47,12 @@ type Props = {
 
 export const ReactGanttCalendar = (props: Props) => {
   const { columns } = props
-  const startDate = dayjs(props.startDate)
-  const displayRangeNumber = props.displayRangeNumber ?? 31
-  const displayRangeUnitNumber = props.displayRangeUnitNumber ?? 1
-  const displayRange = [...Array(displayRangeNumber)].map((_, i) => i * displayRangeUnitNumber)
-  const displayRangeUnit = props.displayRangeUnit ?? 'day'
-  const dateColumnFormat = props.dateColumnFormat ?? 'MM/DD'
+  const startDate = dayjs('2022-08-14')
+  const displayRangeNumber = useMemo(() => props.displayRangeNumber ?? 31, [props.displayRangeNumber])
+  const displayRangeUnitNumber = useMemo(() => props.displayRangeUnitNumber ?? 1, [])
+  const displayRange = useMemo(() => [...Array(displayRangeNumber)].map((_, i) => i * displayRangeUnitNumber), [])
+  const displayRangeUnit = useMemo(() => props.displayRangeUnit ?? 'day', [])
+  const dateColumnFormat = useMemo(() => props.dateColumnFormat ?? 'MM/DD', [])
   const endDate = startDate.add(displayRangeNumber * displayRangeUnitNumber, displayRangeUnit)
   const rowContents = produce(props.rowContents, (draft) => {
     draft.forEach(content => {
