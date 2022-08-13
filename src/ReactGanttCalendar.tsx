@@ -135,7 +135,13 @@ export const ReactGanttCalendar = (props: Props) => {
         })
       })
     )
-  },[])
+  },[
+    displayRangeNumber,
+    displayRangeUnitNumber,
+    displayRange,
+    displayRangeUnit,
+    dateColumnFormat,
+  ])
 
   return (
     <table className={'RTL'}>
