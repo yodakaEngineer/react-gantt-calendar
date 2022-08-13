@@ -98,7 +98,7 @@ const args = {
   ]
 }
 
-const Template: ComponentStory<typeof ReactGanttCalendar> = () => <ReactGanttCalendar {...args} />
+const Template: ComponentStory<typeof ReactGanttCalendar> = (args) => <ReactGanttCalendar {...args} />
 
 export const Default = Template.bind({})
-Default.args = {}
+Default.args = args
