@@ -1,7 +1,7 @@
 {
   "name": "react-gantt-calendar",
   "type": "module",
-  "version": "0.2.1",
+  "version": "0.2.3",
   "types": "./types/main.d.ts",
   "files": [
     "/dist",
@@ -47,6 +47,7 @@
     "@types/react-dom": "^18.0.6",
     "@vitejs/plugin-react": "^2.0.0",
     "babel-loader": "^8.2.5",
+    "immer": "^9.0.15",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "sass": "^1.53.0",

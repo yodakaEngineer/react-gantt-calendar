@@ -25,29 +25,29 @@ const args = {
       label: 'Hotel1',
       childRowHeads: [
         {
-          id: '1-1',
+          id: '1',
           label: '1F',
           childRowHeads: [
             {
-              id: '1-1-1',
+              id: '1',
               label: '101',
             },
             {
-              id: '1-1-2',
+              id: '2',
               label: '102',
             }
           ]
         },
         {
-          id: '1-2',
+          id: '2',
           label: '2F',
           childRowHeads: [
             {
-              id: '1-2-1',
+              id: '3',
               label: '201',
             },
             {
-              id: '1-2-2',
+              id: '4',
               label: '202',
             }
           ]
@@ -61,37 +61,37 @@ const args = {
   ],
   rowContents: [
     {
-      headIds: ['1', '1-1', '1-1-1'],
+      headIds: ['1', '1', '1'],
       events: [
         {
           label: 'Cleaning1',
-          startAt: new Date('2022-08-01'),
-          endAt: new Date('2022-08-02'),
+          startAt: new Date('2022-08-18'),
+          endAt: new Date('2022-08-19'),
         },
       ]
     },
     {
-      headIds: ['1', '1-1', '1-1-2'],
+      headIds: ['1', '1', '2'],
       events: [
         {
           label: 'Cleaning2',
-          startAt: new Date('2022-08-16'),
-          endAt: new Date('2022-08-18'),
+          startAt: new Date('2022-08-20'),
+          endAt: new Date('2022-08-21'),
         },
         {
           label: <button>Cleaning4</button>,
-          startAt: new Date('2022-08-07'),
-          endAt: new Date('2022-08-08'),
+          startAt: new Date('2022-08-17'),
+          endAt: new Date('2022-08-20'),
         }
       ]
     },
     {
-      headIds: ['1', '1-2', '1-2-1'],
+      headIds: ['1', '2', '3'],
       events: [
         {
           label: 'Cleaning3',
-          startAt: new Date('2022-08-01'),
-          endAt: new Date('2022-08-02'),
+          startAt: new Date('2022-08-17'),
+          endAt: new Date('2022-08-20'),
         }
       ]
     },
