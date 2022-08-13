@@ -54,16 +54,17 @@ export const ReactGanttCalendar = (props: Props) => {
   const displayRangeUnit = useMemo(() => props.displayRangeUnit ?? 'day', [props.displayRangeUnit])
   const dateColumnFormat = useMemo(() => props.dateColumnFormat ?? 'MM/DD', [props.dateColumnFormat])
   const endDate = startDate.add(displayRangeNumber * displayRangeUnitNumber, displayRangeUnit)
-  const rowContents = produce(props.rowContents, (draft) => {
-    draft.forEach(content => {
-      content.events = content.events.filter(event => dayjs(event.startAt).isBetween(startDate, endDate, displayRangeUnit, '[]'))
-      const headIds: RowHead['id'][] = []
-      content.headIds.forEach((v, i) => {
-        headIds.push(i !== 0 ? `${headIds[i-1]}_${v}` : v)
+  const rowContents = useMemo(
+    () => produce(props.rowContents, (draft) => {
+      draft.forEach(content => {
+        content.events = content.events.filter(event => dayjs(event.startAt).isBetween(startDate, endDate, displayRangeUnit, '[]'))
+        const headIds: RowHead['id'][] = []
+        content.headIds.forEach((v, i) => {
+          headIds.push(i !== 0 ? `${headIds[i-1]}_${v}` : v)
+        })
+        content.headIds = headIds
       })
-      content.headIds = headIds
-    })
-  })
+    }), [props.rowContents, displayRangeUnit])
 
   const rowHeads = useMemo(() => {
     const recursiveRowSpans = (head: RowHead) => {
