@@ -1,6 +1,6 @@
 // FIXME: I wanna allow user opt in.
 import './styles.scss'
-import React, {createRef, RefObject, useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import React, {createRef, RefObject, useEffect, useMemo, useRef, useState} from 'react'
 import dayjs, {ManipulateType} from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
 import produce from 'immer'
@@ -115,24 +115,20 @@ export const ReactGanttCalendar = (props: Props) => {
     })
   }, [rowContents, rowHeads, renderedHeadIds])
 
-  const dateRefs = useRef<RefObject<HTMLTableDataCellElement>[][]>(rowContents.map(v => {
-    return v.events.map(() => createRef<HTMLTableDataCellElement>())
+  const dateRefs = useRef<RefObject<HTMLTableDataCellElement>[][]>(tableRows.map(_ => {
+    return displayRange.map(() => createRef<HTMLTableDataCellElement>())
   }))
   const [eventStartPositions, setEventStartPositions] = useState<number[][]>([])
-  const isScheduleStartPosition = useCallback(
-    (index: number, unit: number, content: RowContent) => {
-      const current = startDate.add(unit, displayRangeUnit)
-      const next = current.add(1, displayRangeUnit)
-      const refIndex = content.events.findIndex(event => dayjs(event.startAt).isBetween(current, next, displayRangeUnit, '[)'))
-      return refIndex === -1 ? undefined : dateRefs.current[index][refIndex]
-    },
-    [startDate, displayRangeUnit, dateRefs]
-  )
   // FIXME: Avoid to use useEffect.
   useEffect(() => {
     setEventStartPositions(tableRows.map((row, index) => {
-        return row.tableContent.events.map((event, eventIndex) => {
-          return dateRefs.current[index][eventIndex]?.current?.offsetLeft ?? 0
+        return row.tableContent.events.map((event) => {
+          const rangeIndex = displayRange.findIndex(unit => {
+            const current = startDate.add(unit, displayRangeUnit)
+            const next = current.add(1, displayRangeUnit)
+            return dayjs(event.startAt).isBetween(current, next, displayRangeUnit, '[)')
+          })
+          return dateRefs.current[index][rangeIndex]?.current?.offsetLeft ?? 0
         })
       })
     )
@@ -173,11 +169,11 @@ export const ReactGanttCalendar = (props: Props) => {
                 </th>
               )
             })}
-            {displayRange.map((unit) => (
+            {displayRange.map((unit, displayRangeIndex) => (
               <td
                 key={'RTLDR_' + unit}
                 className={'RTLTbodyTr__td'}
-                ref={isScheduleStartPosition(index, unit, row.tableContent)}
+                ref={dateRefs.current[index][displayRangeIndex]}
               />
             ))}
             {
