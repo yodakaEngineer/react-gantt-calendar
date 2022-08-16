@@ -133,6 +133,7 @@ export const ReactGanttCalendar = (props: Props) => {
       })
     )
   },[
+    startDate,
     displayRangeNumber,
     displayRangeUnitNumber,
     displayRange,
