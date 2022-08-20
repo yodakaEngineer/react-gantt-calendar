@@ -1,6 +1,6 @@
 // FIXME: I wanna allow user opt in.
 import './styles.scss'
-import React, {createRef, RefObject, useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import React, {createRef, RefObject, useEffect, useMemo, useRef, useState} from 'react'
 import dayjs, {ManipulateType} from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
 import produce from 'immer'
@@ -47,23 +47,24 @@ type Props = {
 
 export const ReactGanttCalendar = (props: Props) => {
   const { columns } = props
-  const startDate = dayjs(props.startDate)
-  const displayRangeNumber = props.displayRangeNumber ?? 31
-  const displayRangeUnitNumber = props.displayRangeUnitNumber ?? 1
-  const displayRange = [...Array(displayRangeNumber)].map((_, i) => i * displayRangeUnitNumber)
-  const displayRangeUnit = props.displayRangeUnit ?? 'day'
-  const dateColumnFormat = props.dateColumnFormat ?? 'MM/DD'
+  const displayRangeNumber = useMemo(() => props.displayRangeNumber ?? 31, [props.displayRangeNumber])
+  const displayRangeUnitNumber = useMemo(() => props.displayRangeUnitNumber ?? 1, [props.displayRangeUnitNumber])
+  const displayRange = useMemo(() => [...Array(displayRangeNumber)].map((_, i) => i * displayRangeUnitNumber), [displayRangeNumber])
+  const displayRangeUnit = useMemo(() => props.displayRangeUnit ?? 'day', [props.displayRangeUnit])
+  const dateColumnFormat = useMemo(() => props.dateColumnFormat ?? 'MM/DD', [props.dateColumnFormat])
+  const startDate = dayjs(props.startDate).startOf(displayRangeUnit)
   const endDate = startDate.add(displayRangeNumber * displayRangeUnitNumber, displayRangeUnit)
-  const rowContents = produce(props.rowContents, (draft) => {
-    draft.forEach(content => {
-      content.events = content.events.filter(event => dayjs(event.startAt).isBetween(startDate, endDate, displayRangeUnit, '[]'))
-      const headIds: RowHead['id'][] = []
-      content.headIds.forEach((v, i) => {
-        headIds.push(i !== 0 ? `${headIds[i-1]}_${v}` : v)
+  const rowContents = useMemo(
+    () => produce(props.rowContents, (draft) => {
+      draft.forEach(content => {
+        content.events = content.events.filter(event => dayjs(event.startAt).isBetween(startDate, endDate, displayRangeUnit, '[)'))
+        const headIds: RowHead['id'][] = []
+        content.headIds.forEach((v, i) => {
+          headIds.push(i !== 0 ? `${headIds[i-1]}_${v}` : v)
+        })
+        content.headIds = headIds
       })
-      content.headIds = headIds
-    })
-  })
+    }), [props.rowContents, displayRangeUnit, startDate, endDate])
 
   const rowHeads = useMemo(() => {
     const recursiveRowSpans = (head: RowHead) => {
@@ -114,33 +115,25 @@ export const ReactGanttCalendar = (props: Props) => {
     })
   }, [rowContents, rowHeads, renderedHeadIds])
 
-  const dateRefs = useRef<RefObject<HTMLTableDataCellElement>[][]>(rowContents.map(v => {
-    return v.events.map(() => createRef<HTMLTableDataCellElement>())
+  const dateRefs = useRef<RefObject<HTMLTableDataCellElement>[][]>(tableRows.map(_ => {
+    return displayRange.map(() => createRef<HTMLTableDataCellElement>())
   }))
   const [eventStartPositions, setEventStartPositions] = useState<number[][]>([])
-  const isScheduleStartPosition = useCallback(
-    (index: number, unit: number, content: RowContent) => {
-      const current = startDate.add(unit, displayRangeUnit)
-      const next = current.add(1, displayRangeUnit)
-      const refIndex = content.events.findIndex(event => dayjs(event.startAt).isBetween(current, next, displayRangeUnit, '[)'))
-      return refIndex === -1 ? undefined : dateRefs.current[index][refIndex]
-    },
-    [startDate, displayRangeUnit, dateRefs]
-  )
   // FIXME: Avoid to use useEffect.
   useEffect(() => {
     setEventStartPositions(tableRows.map((row, index) => {
-        return row.tableContent.events.map((event, eventIndex) => {
-          return dateRefs.current[index][eventIndex]?.current?.offsetLeft ?? 0
+        return row.tableContent.events.map((event) => {
+          const rangeIndex = displayRange.findIndex(unit => {
+            const current = startDate.add(unit, displayRangeUnit)
+            const next = current.add(1, displayRangeUnit)
+            return dayjs(event.startAt).isBetween(current, next, displayRangeUnit, '[)')
+          })
+          return dateRefs.current[index][rangeIndex]?.current?.offsetLeft ?? 0
         })
       })
     )
   },[
-    displayRangeNumber,
-    displayRangeUnitNumber,
-    displayRange,
-    displayRangeUnit,
-    dateColumnFormat,
+    props
   ])
 
   return (
@@ -172,11 +165,11 @@ export const ReactGanttCalendar = (props: Props) => {
                 </th>
               )
             })}
-            {displayRange.map((unit) => (
+            {displayRange.map((unit, displayRangeIndex) => (
               <td
                 key={'RTLDR_' + unit}
                 className={'RTLTbodyTr__td'}
-                ref={isScheduleStartPosition(index, unit, row.tableContent)}
+                ref={dateRefs.current[index][displayRangeIndex]}
               />
             ))}
             {
