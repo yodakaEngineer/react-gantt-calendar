@@ -43,6 +43,7 @@ type Props = {
   displayRangeUnit?: ManipulateType
   displayRangeUnitNumber?: number
   dateColumnFormat?: string
+  tableDataWidth?: number
 }
 
 export const ReactGanttCalendar = (props: Props) => {
@@ -54,6 +55,7 @@ export const ReactGanttCalendar = (props: Props) => {
   const dateColumnFormat = useMemo(() => props.dateColumnFormat ?? 'MM/DD', [props.dateColumnFormat])
   const startDate = dayjs(props.startDate).startOf(displayRangeUnit)
   const endDate = startDate.add(displayRangeNumber * displayRangeUnitNumber, displayRangeUnit)
+  const tableDataWidth = props.tableDataWidth ?? 60
   const rowContents = useMemo(
     () => produce(props.rowContents, (draft) => {
       draft.forEach(content => {
@@ -137,14 +139,14 @@ export const ReactGanttCalendar = (props: Props) => {
   ])
 
   return (
-    <table className={'RTL'}>
+    <table className={'RTL'} style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'collapse' }}>
       <thead className={'RTLThead'}>
       <tr className={'RTLTheadTr'}>
-        {columns.map((column, index) => (<th className={'RTLTheadTr__th'} key={`RTLTheadTr__th_${index}`}>{column.label}</th>))}
+        {columns.map((column, index) => (<th className={'RTLTheadTr__th'} key={`RTLTheadTr__th_${index}`} style={{ width: tableDataWidth }}>{column.label}</th>))}
         {displayRange.map(unit => {
           const date = startDate.add(unit, displayRangeUnit)
           return (
-            <td key={'RTLDR_' + unit} className={'RTLTheadTr__td'}>
+            <td key={'RTLDR_' + unit} className={'RTLTheadTr__td'} style={{ width: tableDataWidth, boxSizing: 'border-box', }}>
               {date.format(dateColumnFormat)}
             </td>
           )
@@ -177,7 +179,12 @@ export const ReactGanttCalendar = (props: Props) => {
                 <td
                   key={`RTLevent_${eventIndex}`}
                   className={typeof event.label === 'string' ? 'RTLevent' : undefined}
-                  style={{ left: eventStartPositions.length !== 0 ? eventStartPositions[index][eventIndex] : 0, position: 'absolute' }}
+                  style={{
+                    boxSizing: 'border-box',
+                    left: eventStartPositions.length !== 0 ? eventStartPositions[index][eventIndex] : 0,
+                    position: 'absolute',
+                    width: tableDataWidth * dayjs(event.endAt).diff(event.startAt, displayRangeUnit),
+                  }}
                 >
                   {event.label}
                 </td>
