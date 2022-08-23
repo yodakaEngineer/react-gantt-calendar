@@ -59,7 +59,9 @@ export const ReactGanttCalendar = (props: Props) => {
   const rowContents = useMemo(
     () => produce(props.rowContents, (draft) => {
       draft.forEach(content => {
-        content.events = content.events.filter(event => dayjs(event.startAt).isBetween(startDate, endDate, displayRangeUnit, '[)'))
+        content.events = content.events
+          .filter(event => dayjs(event.startAt).isBetween(startDate, endDate, displayRangeUnit, '[)'))
+          .sort((prevEvent, currentEvent) => dayjs(prevEvent.startAt).diff(currentEvent.startAt))
         const headIds: RowHead['id'][] = []
         content.headIds.forEach((v, i) => {
           headIds.push(i !== 0 ? `${headIds[i-1]}_${v}` : v)
