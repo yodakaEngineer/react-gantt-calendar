@@ -139,7 +139,7 @@ export const ReactGanttCalendar = (props: Props) => {
   ])
 
   return (
-    <table className={'RTL'} style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'collapse' }}>
+    <table className={'RTL'} style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'collapse', overflow: 'hidden' }}>
       <thead className={'RTLThead'}>
       <tr className={'RTLTheadTr'}>
         {columns.map((column, index) => (<th className={'RTLTheadTr__th'} key={`RTLTheadTr__th_${index}`} style={{ width: tableDataWidth }}>{column.label}</th>))}
