@@ -117,6 +117,11 @@ export const ReactGanttCalendar = (props: Props) => {
     })
   }, [rowContents, rowHeads, renderedHeadIds])
 
+  const heightRefs = useRef<RefObject<HTMLDivElement>[][]>(tableRows.map(row => {
+    return row.tableContent.events.map(() => createRef<HTMLDivElement>())
+  }))
+  const [heightList, setHeightList] = useState<number[]>([])
+
   const dateRefs = useRef<RefObject<HTMLTableDataCellElement>[][]>(tableRows.map(_ => {
     return displayRange.map(() => createRef<HTMLTableDataCellElement>())
   }))
@@ -134,6 +139,13 @@ export const ReactGanttCalendar = (props: Props) => {
         })
       })
     )
+    setHeightList(heightRefs.current.map(row => {
+      // Maybe, reduce func cannot use value that is not element of array as return type.
+      // So, I use map func before reduce.
+      return row
+        .map(v => v.current?.clientHeight ?? 0)
+        .reduce((prev, current) => prev + current)
+    }))
   },[
     props
   ])
@@ -156,7 +168,7 @@ export const ReactGanttCalendar = (props: Props) => {
       <tbody>
       {
         tableRows.map((row, index) => (
-          <tr key={'RTLTR_' + index} style={{ position: 'relative' }}>
+          <tr key={'RTLTR_' + index} style={{ position: 'relative', height: heightList.length && heightList[index] }}>
             {row.tableHeads.map((head) => {
               return (
                 <th key={'RTLTH_' + head.id}
@@ -174,22 +186,32 @@ export const ReactGanttCalendar = (props: Props) => {
                 ref={dateRefs.current[index][displayRangeIndex]}
               />
             ))}
-            {
-              row.tableContent.events.map((event, eventIndex) => (
-                <td
-                  key={`RTLevent_${eventIndex}`}
-                  className={typeof event.label === 'string' ? 'RTLevent' : undefined}
-                  style={{
-                    boxSizing: 'border-box',
-                    left: eventStartPositions.length !== 0 ? eventStartPositions[index][eventIndex] : 0,
-                    position: 'absolute',
-                    width: tableDataWidth * dayjs(event.endAt).diff(event.startAt, displayRangeUnit),
-                  }}
-                >
-                  {event.label}
-                </td>
-              ))
-            }
+            <td
+              style={{
+                width: '100%',
+                position: 'absolute',
+                top: 0,
+                bottom: 0,
+                left: 0,
+              }}
+            >
+              {
+                row.tableContent.events.map((event, eventIndex) => (
+                  <div
+                    ref={heightRefs.current[index][eventIndex]}
+                    key={`RTLevent_${eventIndex}`}
+                    className={typeof event.label === 'string' ? 'RTLevent' : undefined}
+                    style={{
+                      boxSizing: 'border-box',
+                      marginLeft: eventStartPositions.length !== 0 ? eventStartPositions[index][eventIndex] : 0,
+                      width: tableDataWidth * dayjs(event.endAt).diff(event.startAt, displayRangeUnit),
+                    }}
+                  >
+                    {event.label}
+                  </div>
+                ))
+              }
+            </td>
           </tr>
         ))
       }
