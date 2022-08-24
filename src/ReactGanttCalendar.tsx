@@ -1,6 +1,6 @@
 // FIXME: I wanna allow user opt in.
 import './styles.scss'
-import React, {createRef, RefObject, useCallback, useEffect, useRef, useState} from 'react'
+import React, {useCallback, useState} from 'react'
 import dayjs, {ManipulateType} from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
 import produce from 'immer'
@@ -115,10 +115,7 @@ export const ReactGanttCalendar = (props: Props) => {
     return row
   })
 
-  const heightRefs = useRef<RefObject<HTMLDivElement>[][]>(tableRows.map(row => {
-    return row.tableContent.events.map(() => createRef<HTMLDivElement>())
-  }))
-  const [heightList, setHeightList] = useState<number[]>([])
+  const [heightList, setHeightList] = useState<number[][]>(tableRows.map(row => row.tableContent.events.map(() => 0)))
 
   const [eventStartPositions, setEventStartPositions] = useState<number[][]>(tableRows.map(row => row.tableContent.events.map(() => 0)))
   const measureRef = useCallback(
@@ -146,15 +143,15 @@ export const ReactGanttCalendar = (props: Props) => {
     },
     [tableRows, startDate, displayRangeUnit, displayRange],
   )
-
-  // FIXME: Avoid to use useEffect.
-  useEffect(() => {
-    setHeightList(heightRefs.current.map(row => {
-      return row
-        .map(v => v.current?.clientHeight ?? 0)
-        .reduce((prev, current) => prev + current, 0)
-    }))
-  },[props, heightRefs])
+  const measureHeight = useCallback((node: HTMLDivElement | null, rowIndex: number, eventIndex: number) => {
+    if (node != null) {
+      setHeightList(prev => {
+        return produce(prev, (draft) => {
+          draft[rowIndex][eventIndex] = node.offsetHeight
+        })
+      })
+    }
+  }, [])
 
   return (
     <table className={'RTL'} style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'collapse', overflow: 'hidden' }}>
@@ -174,7 +171,7 @@ export const ReactGanttCalendar = (props: Props) => {
       <tbody>
       {
         tableRows.map((row, index) => (
-          <tr key={'RTLTR_' + index} style={{ position: 'relative', height: heightList.length && heightList[index] }}>
+          <tr key={'RTLTR_' + index} style={{ position: 'relative', height: heightList[index].reduce((a,b) => a + b, 0) }}>
             {row.tableHeads.map((head) => {
               return (
                 <th key={'RTLTH_' + head.id}
@@ -204,7 +201,7 @@ export const ReactGanttCalendar = (props: Props) => {
               {
                 row.tableContent.events.map((event, eventIndex) => (
                   <div
-                    ref={heightRefs.current[index][eventIndex]}
+                    ref={ref => measureHeight(ref, index, eventIndex)}
                     key={`RTLevent_${eventIndex}`}
                     className={typeof event.label === 'string' ? 'RTLevent' : undefined}
                     style={{
