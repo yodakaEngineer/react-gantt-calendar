@@ -1,6 +1,6 @@
 // FIXME: I wanna allow user opt in.
 import './styles.scss'
-import React, {createRef, RefObject, useEffect, useRef, useState} from 'react'
+import React, {createRef, RefObject, useCallback, useEffect, useRef, useState} from 'react'
 import dayjs, {ManipulateType} from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
 import produce from 'immer'
@@ -120,23 +120,35 @@ export const ReactGanttCalendar = (props: Props) => {
   }))
   const [heightList, setHeightList] = useState<number[]>([])
 
-  const dateRefs = useRef<RefObject<HTMLTableDataCellElement>[][]>(tableRows.map(_ => {
-    return displayRange.map(() => createRef<HTMLTableDataCellElement>())
-  }))
-  const [eventStartPositions, setEventStartPositions] = useState<number[][]>([])
+  const [eventStartPositions, setEventStartPositions] = useState<number[][]>(tableRows.map(row => row.tableContent.events.map(() => 0)))
+  const measureRef = useCallback(
+    (node: HTMLTableDataCellElement | null, index: number, rangeIndex: number) => {
+      if (node != null) {
+        setEventStartPositions(prev => {
+          return produce(prev, (draft) => {
+            tableRows.forEach((row, rowIndex) => {
+              if (rowIndex === index) {
+                return row.tableContent.events.forEach((event, eventIndex) => {
+                  const matchedRangeIndex = displayRange.findIndex(unit => {
+                    const current = startDate.add(unit, displayRangeUnit)
+                    const next = current.add(1, displayRangeUnit)
+                    return dayjs(event.startAt).isBetween(current, next, displayRangeUnit, '[)')
+                  })
+                  if (rangeIndex === matchedRangeIndex) {
+                    draft[index][eventIndex] = node.offsetLeft
+                  }
+                })
+              }
+            })
+          })
+        })
+      }
+    },
+    []
+  )
+
   // FIXME: Avoid to use useEffect.
   useEffect(() => {
-    setEventStartPositions(tableRows.map((row, index) => {
-        return row.tableContent.events.map((event) => {
-          const rangeIndex = displayRange.findIndex(unit => {
-            const current = startDate.add(unit, displayRangeUnit)
-            const next = current.add(1, displayRangeUnit)
-            return dayjs(event.startAt).isBetween(current, next, displayRangeUnit, '[)')
-          })
-          return dateRefs.current[index][rangeIndex]?.current?.offsetLeft ?? 0
-        })
-      })
-    )
     setHeightList(heightRefs.current.map(row => {
       return row
         .map(v => v.current?.clientHeight ?? 0)
@@ -177,7 +189,7 @@ export const ReactGanttCalendar = (props: Props) => {
               <td
                 key={'RTLDR_' + unit}
                 className={'RTLTbodyTr__td'}
-                ref={dateRefs.current[index][displayRangeIndex]}
+                ref={ref => measureRef(ref, index, displayRangeIndex)}
               />
             ))}
             <td
