@@ -142,11 +142,9 @@ export const ReactGanttCalendar = (props: Props) => {
       })
     )
     setHeightList(heightRefs.current.map(row => {
-      // Maybe, reduce func cannot use value that is not element of array as return type.
-      // So, I use map func before reduce.
       return row
         .map(v => v.current?.clientHeight ?? 0)
-        .reduce((prev, current) => prev + current)
+        .reduce((prev, current) => prev + current, 0)
     }))
   },[
     props
