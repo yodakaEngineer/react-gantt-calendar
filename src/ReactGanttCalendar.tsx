@@ -144,7 +144,7 @@ export const ReactGanttCalendar = (props: Props) => {
         })
       }
     },
-    []
+    [tableRows, startDate, displayRangeUnit, displayRange],
   )
 
   // FIXME: Avoid to use useEffect.
