@@ -1,6 +1,6 @@
 // FIXME: I wanna allow user opt in.
 import './styles.scss'
-import React, {createRef, RefObject, useEffect, useMemo, useRef, useState} from 'react'
+import React, {createRef, RefObject, useEffect, useRef, useState} from 'react'
 import dayjs, {ManipulateType} from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
 import produce from 'immer'
@@ -48,76 +48,72 @@ type Props = {
 
 export const ReactGanttCalendar = (props: Props) => {
   const { columns } = props
-  const displayRangeNumber = useMemo(() => props.displayRangeNumber ?? 31, [props.displayRangeNumber])
-  const displayRangeUnitNumber = useMemo(() => props.displayRangeUnitNumber ?? 1, [props.displayRangeUnitNumber])
-  const displayRange = useMemo(() => [...Array(displayRangeNumber)].map((_, i) => i * displayRangeUnitNumber), [displayRangeNumber])
-  const displayRangeUnit = useMemo(() => props.displayRangeUnit ?? 'day', [props.displayRangeUnit])
-  const dateColumnFormat = useMemo(() => props.dateColumnFormat ?? 'MM/DD', [props.dateColumnFormat])
+  const displayRangeNumber = props.displayRangeNumber ?? 31
+  const displayRangeUnitNumber = props.displayRangeUnitNumber ?? 1
+  const displayRange = [...Array(displayRangeNumber)].map((_, i) => i * displayRangeUnitNumber)
+  const displayRangeUnit = props.displayRangeUnit ?? 'day'
+  const dateColumnFormat = props.dateColumnFormat ?? 'MM/DD'
   const startDate = dayjs(props.startDate).startOf(displayRangeUnit)
   const endDate = startDate.add(displayRangeNumber * displayRangeUnitNumber, displayRangeUnit)
   const tableDataWidth = props.tableDataWidth ?? 60
-  const rowContents = useMemo(
-    () => produce(props.rowContents, (draft) => {
-      draft.forEach(content => {
-        content.events = content.events
-          .filter(event => dayjs(event.startAt).isBetween(startDate, endDate, displayRangeUnit, '[)'))
-          .sort((prevEvent, currentEvent) => dayjs(prevEvent.startAt).diff(currentEvent.startAt))
-        const headIds: RowHead['id'][] = []
-        content.headIds.forEach((v, i) => {
-          headIds.push(i !== 0 ? `${headIds[i-1]}_${v}` : v)
-        })
-        content.headIds = headIds
+  const rowContents = produce(props.rowContents, (draft) => {
+    draft.forEach(content => {
+      content.events = content.events
+        .filter(event => dayjs(event.startAt).isBetween(startDate, endDate, displayRangeUnit, '[)'))
+        .sort((prevEvent, currentEvent) => dayjs(prevEvent.startAt).diff(currentEvent.startAt))
+      const headIds: RowHead['id'][] = []
+      content.headIds.forEach((v, i) => {
+        headIds.push(i !== 0 ? `${headIds[i-1]}_${v}` : v)
       })
-    }), [props.rowContents, displayRangeUnit, startDate, endDate])
-
-  const rowHeads = useMemo(() => {
-    const recursiveRowSpans = (head: RowHead) => {
-      if (head.childRowHeads) {
-        head.childRowHeads = head.childRowHeads.map(recursiveRowSpans)
-      }
-      head.rowSpan = rowContents
-        .filter(content => content.headIds.includes(head.id))
-        .length
-      return head
-    }
-    const recursiveAddPrefixToHeadId = (head: RowHead, parentHead?: RowHead) => {
-      if (parentHead?.id) {
-        head.id = `${parentHead.id}_${head.id}`
-      }
-      if (head.childRowHeads) {
-        head.childRowHeads = head.childRowHeads.map(v => recursiveAddPrefixToHeadId(v, head))
-      }
-      return head
-    }
-    return produce(props.rowHeads, (draft) => {
-      draft.forEach(v => recursiveAddPrefixToHeadId(v))
-      draft.forEach(recursiveRowSpans)
+      content.headIds = headIds
     })
-  }, [props.rowHeads, rowContents])
+  })
+
+  const recursiveRowSpans = (head: RowHead) => {
+    if (head.childRowHeads) {
+      head.childRowHeads = head.childRowHeads.map(recursiveRowSpans)
+    }
+    head.rowSpan = rowContents
+      .filter(content => content.headIds.includes(head.id))
+      .length
+    return head
+  }
+  const recursiveAddPrefixToHeadId = (head: RowHead, parentHead?: RowHead) => {
+    if (parentHead?.id) {
+      head.id = `${parentHead.id}_${head.id}`
+    }
+    if (head.childRowHeads) {
+      head.childRowHeads = head.childRowHeads.map(v => recursiveAddPrefixToHeadId(v, head))
+    }
+    return head
+  }
+  const rowHeads = produce(props.rowHeads, (draft) => {
+    draft.forEach(v => recursiveAddPrefixToHeadId(v))
+    draft.forEach(recursiveRowSpans)
+  })
 
   const renderedHeadIds: RowHead['id'][] = []
-  const tableRows: TableRow[] = useMemo(() => {
-    const recursiveMakeTableRows = (content: RowContent, head: RowHead, renderedHeadIds: RowHead['id'][], row: TableRow) => {
-      if (content.headIds.includes(head.id)) {
-        if (!renderedHeadIds.includes(head.id)) {
-          row.tableHeads.push(head)
-          renderedHeadIds.push(head.id)
-        }
-        if (head.childRowHeads) {
-          head.childRowHeads.forEach(childHead => { recursiveMakeTableRows(content, childHead, renderedHeadIds, row) })
-        }
+  const recursiveMakeTableRows = (content: RowContent, head: RowHead, renderedHeadIds: RowHead['id'][], row: TableRow) => {
+    if (content.headIds.includes(head.id)) {
+      if (!renderedHeadIds.includes(head.id)) {
+        row.tableHeads.push(head)
+        renderedHeadIds.push(head.id)
       }
-      return row
+      if (head.childRowHeads) {
+        head.childRowHeads.forEach(childHead => { recursiveMakeTableRows(content, childHead, renderedHeadIds, row) })
+      }
     }
-    return rowContents.map(content => {
-      const row: TableRow = {
-        tableHeads: [],
-        tableContent: content,
-      }
-      rowHeads.forEach(head => { recursiveMakeTableRows(content, head, renderedHeadIds, row) })
-      return row
-    })
-  }, [rowContents, rowHeads, renderedHeadIds])
+    return row
+  }
+
+  const tableRows: TableRow[] = rowContents.map(content => {
+    const row: TableRow = {
+      tableHeads: [],
+      tableContent: content,
+    }
+    rowHeads.forEach(head => { recursiveMakeTableRows(content, head, renderedHeadIds, row) })
+    return row
+  })
 
   const heightRefs = useRef<RefObject<HTMLDivElement>[][]>(tableRows.map(row => {
     return row.tableContent.events.map(() => createRef<HTMLDivElement>())
@@ -146,9 +142,7 @@ export const ReactGanttCalendar = (props: Props) => {
         .map(v => v.current?.clientHeight ?? 0)
         .reduce((prev, current) => prev + current, 0)
     }))
-  },[
-    props
-  ])
+  },[props, heightRefs])
 
   return (
     <table className={'RTL'} style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'collapse', overflow: 'hidden' }}>
