@@ -1,6 +1,6 @@
 // FIXME: I wanna allow user opt in.
 import './styles.scss'
-import React, {createRef, RefObject, useEffect, useRef, useState} from 'react'
+import React, {createRef, RefObject, useEffect, useMemo, useRef, useState} from 'react'
 import dayjs, {ManipulateType} from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
 import produce from 'immer'
@@ -50,7 +50,7 @@ export const ReactGanttCalendar = (props: Props) => {
   const { columns } = props
   const displayRangeNumber = props.displayRangeNumber ?? 31
   const displayRangeUnitNumber = props.displayRangeUnitNumber ?? 1
-  const displayRange = [...Array(displayRangeNumber)].map((_, i) => i * displayRangeUnitNumber)
+  const displayRange = useMemo(() => [...Array(displayRangeNumber)].map((_, i) => i * displayRangeUnitNumber), []);
   const displayRangeUnit = props.displayRangeUnit ?? 'day'
   const dateColumnFormat = props.dateColumnFormat ?? 'MM/DD'
   const startDate = dayjs(props.startDate).startOf(displayRangeUnit)
@@ -142,7 +142,15 @@ export const ReactGanttCalendar = (props: Props) => {
         .map(v => v.current?.clientHeight ?? 0)
         .reduce((prev, current) => prev + current, 0)
     }))
-  },[props, heightRefs])
+  },[
+    displayRangeNumber,
+    displayRangeUnitNumber,
+    displayRange,
+    displayRangeUnit,
+    dateColumnFormat,
+    tableDataWidth,
+    heightRefs,
+  ])
 
   return (
     <table className={'RTL'} style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'collapse', overflow: 'hidden' }}>
