@@ -14,8 +14,12 @@ type RowHead = {
   rowSpan?: number
 }
 
+type EventLabelCallbackProps = {
+  width: number
+}
+
 type Event = {
-  label: string | React.ReactNode
+  label: string | React.FC<EventLabelCallbackProps>
   startAt: Date
   endAt: Date
 }
@@ -210,7 +214,7 @@ export const ReactGanttCalendar = (props: Props) => {
                       width: tableDataWidth * dayjs(event.endAt).diff(event.startAt, displayRangeUnit),
                     }}
                   >
-                    {event.label}
+                    {typeof event.label === 'string' ? event.label : event.label({ width: tableDataWidth * dayjs(event.endAt).diff(event.startAt, displayRangeUnit) })}
                   </div>
                 ))
               }

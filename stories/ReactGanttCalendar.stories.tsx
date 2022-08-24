@@ -65,8 +65,8 @@ const args = {
       events: [
         {
           label: 'Cleaning1',
-          startAt: new Date('2022-08-18'),
-          endAt: new Date('2022-08-19'),
+          startAt: new Date('2022-08-25T16:00:00'),
+          endAt: new Date('2022-08-27'),
         },
       ]
     },
@@ -75,14 +75,19 @@ const args = {
       events: [
         {
           label: 'Cleaning2',
-          startAt: new Date('2022-08-20'),
-          endAt: new Date('2022-08-21'),
+          startAt: new Date('2022-08-25T23:00:00'),
+          endAt: new Date('2022-08-28'),
         },
         {
-          label: <button>Cleaning4</button>,
-          startAt: new Date('2022-08-17'),
-          endAt: new Date('2022-08-20'),
-        }
+          label: ({ width }: { width: number }) => <button style={{width, textAlign: 'left'}}>Cleaning4</button>,
+          startAt: new Date('2022-08-25T20:00:00'),
+          endAt: new Date('2022-08-27'),
+        },
+        {
+          label: <button>Cleaning5</button>,
+          startAt: new Date('2022-08-18T22:00:00'),
+          endAt: new Date('2022-08-27'),
+        },
       ]
     },
     {
@@ -90,8 +95,8 @@ const args = {
       events: [
         {
           label: 'Cleaning3',
-          startAt: new Date('2022-08-17'),
-          endAt: new Date('2022-08-20'),
+          startAt: new Date('2022-09-07T16:00:00'),
+          endAt: new Date('2022-09-09'),
         }
       ]
     },
