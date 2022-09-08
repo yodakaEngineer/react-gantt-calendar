@@ -3,9 +3,11 @@ import './styles.scss'
 import React, {useCallback, useState} from 'react'
 import dayjs, {ManipulateType} from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
 import produce from 'immer'
 
 dayjs.extend(isBetween)
+dayjs.extend(isSameOrAfter)
 
 type RowHead = {
   id: string | number
@@ -63,7 +65,7 @@ export const ReactGanttCalendar = (props: Props) => {
   const rowContents = produce(props.rowContents, (draft) => {
     draft.forEach(content => {
       content.events = content.events
-        .filter(event => dayjs(event.startAt).isBetween(startDate, endDate, displayRangeUnit, '[)'))
+        .filter(event => dayjs(event.startAt).isBetween(startDate, endDate, displayRangeUnit, '[)') || dayjs(event.endAt).isBetween(startDate, endDate, displayRangeUnit, '(]'))
         .sort((prevEvent, currentEvent) => dayjs(prevEvent.startAt).diff(currentEvent.startAt))
       const headIds: RowHead['id'][] = []
       content.headIds.forEach((v, i) => {
@@ -95,6 +97,12 @@ export const ReactGanttCalendar = (props: Props) => {
     draft.forEach(v => recursiveAddPrefixToHeadId(v))
     draft.forEach(recursiveRowSpans)
   })
+  const calcWidth = (event: Event) => {
+    if (startDate.isSameOrAfter(event.startAt, displayRangeUnit)) {
+      return tableDataWidth * dayjs(event.endAt).diff(startDate, displayRangeUnit)
+    }
+    return tableDataWidth * dayjs(event.endAt).diff(event.startAt, displayRangeUnit)
+  }
 
   const renderedHeadIds: RowHead['id'][] = []
   const recursiveMakeTableRows = (content: RowContent, head: RowHead, renderedHeadIds: RowHead['id'][], row: TableRow) => {
@@ -130,11 +138,13 @@ export const ReactGanttCalendar = (props: Props) => {
             tableRows.forEach((row, rowIndex) => {
               if (rowIndex === index) {
                 return row.tableContent.events.forEach((event, eventIndex) => {
-                  const matchedRangeIndex = displayRange.findIndex(unit => {
+                  let matchedRangeIndex = displayRange.findIndex(unit => {
                     const current = startDate.add(unit, displayRangeUnit)
                     const next = current.add(1, displayRangeUnit)
                     return dayjs(event.startAt).isBetween(current, next, displayRangeUnit, '[)')
                   })
+                  // if it doesn't match, its startAt is before startDate. So it should be 0
+                  matchedRangeIndex = matchedRangeIndex === -1 ? 0 : matchedRangeIndex
                   if (rangeIndex === matchedRangeIndex) {
                     draft[index][eventIndex] = node.offsetLeft
                   }
@@ -211,7 +221,7 @@ export const ReactGanttCalendar = (props: Props) => {
                     style={{
                       boxSizing: 'border-box',
                       marginLeft: eventStartPositions.length !== 0 ? eventStartPositions[index][eventIndex] : 0,
-                      width: tableDataWidth * dayjs(event.endAt).diff(event.startAt, displayRangeUnit),
+                      width: calcWidth(event),
                     }}
                   >
                     {typeof event.label === 'string' ? event.label : event.label({ width: tableDataWidth * dayjs(event.endAt).diff(event.startAt, displayRangeUnit) })}
