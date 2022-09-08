@@ -19,6 +19,7 @@ $waikawa-gray-900: #2c324e;
     background: $waikawa-gray-700;
     &__td,&__th {
       padding: 0.4rem;
+      text-align: center;
     }
     &__td {
       border-right: 1px solid $waikawa-gray-400;
