@@ -56,7 +56,7 @@ type Props = {
 
 export const ReactGanttCalendar = (props: Props) => {
   const { columns } = props
-  const displayRangeNumber = props.displayRangeNumber ?? 31
+  const displayRangeNumber = props.displayRangeNumber ?? 3
   const displayRangeUnitNumber = props.displayRangeUnitNumber ?? 1
   const displayRange = [...Array(displayRangeNumber)].map((_, i) => i * displayRangeUnitNumber)
   const displayRangeUnit = props.displayRangeUnit ?? 'day'
@@ -225,7 +225,7 @@ export const ReactGanttCalendar = (props: Props) => {
                       width: calcWidth(event),
                     }}
                   >
-                    {typeof event.label === 'string' ? event.label : event.label({ width: tableDataWidth * dayjs(event.endAt).diff(event.startAt, displayRangeUnit) })}
+                    {typeof event.label === 'string' ? event.label : event.label({ width: calcWidth(event) })}
                   </div>
                 ))
               }
