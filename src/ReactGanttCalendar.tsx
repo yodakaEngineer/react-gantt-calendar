@@ -4,10 +4,12 @@ import React, {useCallback, useState} from 'react'
 import dayjs, {ManipulateType} from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
 import produce from 'immer'
 
 dayjs.extend(isBetween)
 dayjs.extend(isSameOrAfter)
+dayjs.extend(isSameOrBefore)
 
 type RowHead = {
   id: string | number
@@ -98,10 +100,9 @@ export const ReactGanttCalendar = (props: Props) => {
     draft.forEach(recursiveRowSpans)
   })
   const calcWidth = (event: Event) => {
-    if (startDate.isSameOrAfter(event.startAt, displayRangeUnit)) {
-      return tableDataWidth * dayjs(event.endAt).diff(startDate, displayRangeUnit)
-    }
-    return tableDataWidth * dayjs(event.endAt).diff(event.startAt, displayRangeUnit)
+    const start = startDate.isSameOrAfter(event.startAt, displayRangeUnit) ? startDate : event.startAt
+    const end = endDate.isSameOrBefore(event.endAt, displayRangeUnit) ? endDate : event.endAt
+    return tableDataWidth * dayjs(end).diff(start, displayRangeUnit)
   }
 
   const renderedHeadIds: RowHead['id'][] = []
