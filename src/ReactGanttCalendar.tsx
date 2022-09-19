@@ -102,7 +102,8 @@ export const ReactGanttCalendar = (props: Props) => {
   const calcWidth = (event: Event) => {
     const start = startDate.isSameOrAfter(event.startAt, displayRangeUnit) ? startDate : event.startAt
     const end = endDate.isSameOrBefore(event.endAt, displayRangeUnit) ? endDate : event.endAt
-    return tableDataWidth * dayjs(end).diff(start, displayRangeUnit)
+    const diff = dayjs(end).diff(start, displayRangeUnit)
+    return diff < 1 ? tableDataWidth : tableDataWidth * diff
   }
 
   const renderedHeadIds: RowHead['id'][] = []
