@@ -16,16 +16,13 @@ $waikawa-gray-900: #2c324e;
   box-shadow: 0 0 21px -6px rgba(0,0,0,0.6);
 
   &TheadTr {
-    background: $waikawa-gray-700;
     &__td,&__th {
       padding: 0.4rem;
       text-align: center;
-    }
-    &__td {
-      border-right: 1px solid $waikawa-gray-400;
-      border-bottom: 1px solid $waikawa-gray-400;
-    }
-    &__th {
+      position: sticky;
+      top: 0;
+      z-index: 3;
+      background: $waikawa-gray-700;
       border-right: 1px solid $waikawa-gray-400;
       border-bottom: 1px solid $waikawa-gray-400;
     }

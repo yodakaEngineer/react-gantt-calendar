@@ -4,10 +4,12 @@ import React, {useCallback, useState} from 'react'
 import dayjs, {ManipulateType} from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
 import produce from 'immer'
 
 dayjs.extend(isBetween)
 dayjs.extend(isSameOrAfter)
+dayjs.extend(isSameOrBefore)
 
 type RowHead = {
   id: string | number
@@ -54,7 +56,7 @@ type Props = {
 
 export const ReactGanttCalendar = (props: Props) => {
   const { columns } = props
-  const displayRangeNumber = props.displayRangeNumber ?? 31
+  const displayRangeNumber = props.displayRangeNumber ?? 3
   const displayRangeUnitNumber = props.displayRangeUnitNumber ?? 1
   const displayRange = [...Array(displayRangeNumber)].map((_, i) => i * displayRangeUnitNumber)
   const displayRangeUnit = props.displayRangeUnit ?? 'day'
@@ -98,10 +100,10 @@ export const ReactGanttCalendar = (props: Props) => {
     draft.forEach(recursiveRowSpans)
   })
   const calcWidth = (event: Event) => {
-    if (startDate.isSameOrAfter(event.startAt, displayRangeUnit)) {
-      return tableDataWidth * dayjs(event.endAt).diff(startDate, displayRangeUnit)
-    }
-    return tableDataWidth * dayjs(event.endAt).diff(event.startAt, displayRangeUnit)
+    const start = startDate.isSameOrAfter(event.startAt, displayRangeUnit) ? startDate : event.startAt
+    const end = endDate.isSameOrBefore(event.endAt, displayRangeUnit) ? endDate : event.endAt
+    const diff = dayjs(end).diff(start, displayRangeUnit)
+    return diff < 1 ? tableDataWidth : tableDataWidth * diff
   }
 
   const renderedHeadIds: RowHead['id'][] = []
@@ -168,7 +170,7 @@ export const ReactGanttCalendar = (props: Props) => {
   }, [])
 
   return (
-    <table className={'RTL'} style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'collapse', overflow: 'hidden' }}>
+    <table className={'RTL'} style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'separate', borderSpacing: 0 }}>
       <thead className={'RTLThead'}>
       <tr className={'RTLTheadTr'}>
         {columns.map((column, index) => (<th className={'RTLTheadTr__th'} key={`RTLTheadTr__th_${index}`} style={{ width: tableDataWidth }}>{column.label}</th>))}
@@ -224,7 +226,7 @@ export const ReactGanttCalendar = (props: Props) => {
                       width: calcWidth(event),
                     }}
                   >
-                    {typeof event.label === 'string' ? event.label : event.label({ width: tableDataWidth * dayjs(event.endAt).diff(event.startAt, displayRangeUnit) })}
+                    {typeof event.label === 'string' ? event.label : event.label({ width: calcWidth(event) })}
                   </div>
                 ))
               }
