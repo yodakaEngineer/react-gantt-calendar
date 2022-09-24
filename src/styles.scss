@@ -13,10 +13,11 @@ $waikawa-gray-900: #2c324e;
   color: $waikawa-gray-100;
   font-size: small;
   overflow: scroll;
-  box-shadow: 0 0 21px -6px rgba(0,0,0,0.6);
+  box-shadow: 0 0 21px -6px rgba(0, 0, 0, 0.6);
 
   &TheadTr {
-    &__td,&__th {
+    &__td,
+    &__th {
       padding: 0.4rem;
       text-align: center;
       position: sticky;
@@ -28,7 +29,8 @@ $waikawa-gray-900: #2c324e;
     }
   }
   &TbodyTr {
-    &__td,&__th {
+    &__td,
+    &__th {
       padding: 0.4rem;
     }
     &__td {

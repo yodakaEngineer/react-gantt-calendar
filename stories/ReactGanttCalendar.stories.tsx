@@ -35,8 +35,8 @@ const args = {
             {
               id: '2',
               label: '102',
-            }
-          ]
+            },
+          ],
         },
         {
           id: '2',
@@ -49,15 +49,15 @@ const args = {
             {
               id: '4',
               label: '202',
-            }
-          ]
+            },
+          ],
         },
-      ]
+      ],
     },
     {
       id: '2',
       label: 'Hotel2',
-    }
+    },
   ],
   rowContents: [
     {
@@ -68,7 +68,7 @@ const args = {
           startAt: new Date('2022-08-25T16:00:00'),
           endAt: new Date('2022-08-27'),
         },
-      ]
+      ],
     },
     {
       headIds: ['1', '1', '2'],
@@ -79,7 +79,9 @@ const args = {
           endAt: new Date('2022-08-28'),
         },
         {
-          label: ({ width }: { width: number }) => <button style={{width, textAlign: 'left'}}>Cleaning4</button>,
+          label: ({ width }: { width: number }) => (
+            <button style={{ width, textAlign: 'left' }}>Cleaning4</button>
+          ),
           startAt: new Date('2022-08-25T20:00:00'),
           endAt: new Date('2022-08-27'),
         },
@@ -88,7 +90,7 @@ const args = {
           startAt: new Date('2022-08-18T22:00:00'),
           endAt: new Date('2022-08-27'),
         },
-      ]
+      ],
     },
     {
       headIds: ['1', '2', '3'],
@@ -97,13 +99,15 @@ const args = {
           label: 'Cleaning3',
           startAt: new Date('2022-09-07T16:00:00'),
           endAt: new Date('2022-09-09'),
-        }
-      ]
+        },
+      ],
     },
-  ]
+  ],
 }
 
-const Template: ComponentStory<typeof ReactGanttCalendar> = (args) => <ReactGanttCalendar {...args} />
+const Template: ComponentStory<typeof ReactGanttCalendar> = (args) => (
+  <ReactGanttCalendar {...args} />
+)
 
 export const Default = Template.bind({})
 Default.args = args
