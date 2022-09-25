@@ -1,4 +1,4 @@
-import {RowContent, RowHead, TableRow} from '../../ReactGanttCalendar'
+import { RowContent, RowHead, TableRow } from '../../ReactGanttCalendar'
 
 export const recursiveMakeTableRows = (
   content: RowContent,
