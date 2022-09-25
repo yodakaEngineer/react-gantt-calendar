@@ -7,6 +7,7 @@ import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
 import produce from 'immer'
 import React, { useCallback, useState } from 'react'
 import { useRowContents } from './hooks/useRowContents'
+import { useRowHeads } from './hooks/useRowHeads'
 
 dayjs.extend(isBetween)
 dayjs.extend(isSameOrAfter)
@@ -57,6 +58,7 @@ type Props = {
 
 export const ReactGanttCalendar = (props: Props) => {
   const { makeRowContents } = useRowContents()
+  const { makeRowHeads } = useRowHeads()
   const { columns } = props
   const displayRangeNumber = props.displayRangeNumber ?? 3
   const displayRangeUnitNumber = props.displayRangeUnitNumber ?? 1
@@ -77,30 +79,7 @@ export const ReactGanttCalendar = (props: Props) => {
     endDate,
     displayRangeUnit
   )
-  const recursiveRowSpans = (head: RowHead) => {
-    if (head.childRowHeads) {
-      head.childRowHeads = head.childRowHeads.map(recursiveRowSpans)
-    }
-    head.rowSpan = rowContents.filter((content) =>
-      content.headIds.includes(head.id)
-    ).length
-    return head
-  }
-  const recursiveAddPrefixToHeadId = (head: RowHead, parentHead?: RowHead) => {
-    if (parentHead?.id) {
-      head.id = `${parentHead.id}_${head.id}`
-    }
-    if (head.childRowHeads) {
-      head.childRowHeads = head.childRowHeads.map((v) =>
-        recursiveAddPrefixToHeadId(v, head)
-      )
-    }
-    return head
-  }
-  const rowHeads = produce(props.rowHeads, (draft) => {
-    draft.forEach((v) => recursiveAddPrefixToHeadId(v))
-    draft.forEach(recursiveRowSpans)
-  })
+  const rowHeads = makeRowHeads(props.rowHeads, rowContents)
   const calcWidth = (event: Event) => {
     const start = startDate.isSameOrAfter(event.startAt, displayRangeUnit)
       ? startDate
