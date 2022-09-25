@@ -8,6 +8,7 @@ import produce from 'immer'
 import React, { useCallback, useState } from 'react'
 import { useRowContents } from './hooks/useRowContents'
 import { useRowHeads } from './hooks/useRowHeads'
+import { useTableRows } from './hooks/useTableRows'
 
 dayjs.extend(isBetween)
 dayjs.extend(isSameOrAfter)
@@ -35,7 +36,7 @@ export type RowContent = {
   events: Event[]
 }
 
-type TableRow = {
+export type TableRow = {
   tableHeads: RowHead[]
   tableContent: RowContent
 }
@@ -59,6 +60,7 @@ type Props = {
 export const ReactGanttCalendar = (props: Props) => {
   const { makeRowContents } = useRowContents()
   const { makeRowHeads } = useRowHeads()
+  const { makeTableRows } = useTableRows()
   const { columns } = props
   const displayRangeNumber = props.displayRangeNumber ?? 3
   const displayRangeUnitNumber = props.displayRangeUnitNumber ?? 1
@@ -92,36 +94,11 @@ export const ReactGanttCalendar = (props: Props) => {
   }
 
   const renderedHeadIds: RowHead['id'][] = []
-  const recursiveMakeTableRows = (
-    content: RowContent,
-    head: RowHead,
-    renderedHeadIds: RowHead['id'][],
-    row: TableRow
-  ) => {
-    if (content.headIds.includes(head.id)) {
-      if (!renderedHeadIds.includes(head.id)) {
-        row.tableHeads.push(head)
-        renderedHeadIds.push(head.id)
-      }
-      if (head.childRowHeads) {
-        head.childRowHeads.forEach((childHead) => {
-          recursiveMakeTableRows(content, childHead, renderedHeadIds, row)
-        })
-      }
-    }
-    return row
-  }
-
-  const tableRows: TableRow[] = rowContents.map((content) => {
-    const row: TableRow = {
-      tableHeads: [],
-      tableContent: content,
-    }
-    rowHeads.forEach((head) => {
-      recursiveMakeTableRows(content, head, renderedHeadIds, row)
-    })
-    return row
-  })
+  const tableRows: TableRow[] = makeTableRows(
+    rowContents,
+    rowHeads,
+    renderedHeadIds
+  )
 
   const [heightList, setHeightList] = useState<number[][]>(
     tableRows.map((row) => row.tableContent.events.map(() => 0))
