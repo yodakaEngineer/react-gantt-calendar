@@ -6,12 +6,13 @@ import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
 import produce from 'immer'
 import React, { useCallback, useState } from 'react'
+import { useRowContents } from './hooks/useRowContents'
 
 dayjs.extend(isBetween)
 dayjs.extend(isSameOrAfter)
 dayjs.extend(isSameOrBefore)
 
-type RowHead = {
+export type RowHead = {
   id: string | number
   label: string | React.ReactNode
   childRowHeads?: RowHead[]
@@ -22,13 +23,13 @@ type EventLabelCallbackProps = {
   width: number
 }
 
-type Event = {
+export type Event = {
   label: string | React.FC<EventLabelCallbackProps>
   startAt: Date
   endAt: Date
 }
 
-type RowContent = {
+export type RowContent = {
   headIds: RowHead['id'][]
   events: Event[]
 }
@@ -55,6 +56,7 @@ type Props = {
 }
 
 export const ReactGanttCalendar = (props: Props) => {
+  const { makeRowContents } = useRowContents()
   const { columns } = props
   const displayRangeNumber = props.displayRangeNumber ?? 3
   const displayRangeUnitNumber = props.displayRangeUnitNumber ?? 1
@@ -69,35 +71,12 @@ export const ReactGanttCalendar = (props: Props) => {
     displayRangeUnit
   )
   const tableDataWidth = props.tableDataWidth ?? 60
-  const rowContents = produce(props.rowContents, (draft) => {
-    draft.forEach((content) => {
-      content.events = content.events
-        .filter(
-          (event) =>
-            dayjs(event.startAt).isBetween(
-              startDate,
-              endDate,
-              displayRangeUnit,
-              '[)'
-            ) ||
-            dayjs(event.endAt).isBetween(
-              startDate,
-              endDate,
-              displayRangeUnit,
-              '(]'
-            )
-        )
-        .sort((prevEvent, currentEvent) =>
-          dayjs(prevEvent.startAt).diff(currentEvent.startAt)
-        )
-      const headIds: RowHead['id'][] = []
-      content.headIds.forEach((v, i) => {
-        headIds.push(i !== 0 ? `${headIds[i - 1]}_${v}` : v)
-      })
-      content.headIds = headIds
-    })
-  })
-
+  const rowContents = makeRowContents(
+    props.rowContents,
+    startDate,
+    endDate,
+    displayRangeUnit
+  )
   const recursiveRowSpans = (head: RowHead) => {
     if (head.childRowHeads) {
       head.childRowHeads = head.childRowHeads.map(recursiveRowSpans)
