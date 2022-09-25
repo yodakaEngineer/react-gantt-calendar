@@ -1,3 +1,5 @@
+/// <reference types="vitest" />
+
 import { ModuleFormat } from 'rollup'
 
 import path from 'path'
@@ -6,6 +8,10 @@ import { defineConfig } from 'vite'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  test: {
+    globals: true,
+    setupFiles: './src/setup.ts',
+  },
   plugins: [
     react({
       jsxRuntime: 'classic',
