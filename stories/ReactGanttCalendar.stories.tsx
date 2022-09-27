@@ -1,6 +1,7 @@
 import { ComponentStory } from '@storybook/react'
 import { ReactGanttCalendar } from '../src/ReactGanttCalendar'
 import '../src/styles.scss'
+import dayjs from 'dayjs'
 
 export default {
   component: ReactGanttCalendar,
@@ -8,6 +9,7 @@ export default {
 }
 
 const args = {
+  startDate: dayjs().subtract(1, 'day').toDate(),
   columns: [
     {
       label: 'Hotel',
@@ -65,8 +67,8 @@ const args = {
       events: [
         {
           label: 'Cleaning1',
-          startAt: new Date('2022-08-25T16:00:00'),
-          endAt: new Date('2022-08-27'),
+          startAt: new Date('2022-09-25T16:00:00'),
+          endAt: new Date('2022-09-27T00:00:00'),
         },
       ],
     },
@@ -75,20 +77,15 @@ const args = {
       events: [
         {
           label: 'Cleaning2',
-          startAt: new Date('2022-08-25T23:00:00'),
-          endAt: new Date('2022-08-28'),
+          startAt: new Date('2022-09-25T23:00:00'),
+          endAt: new Date('2022-09-28T00:00:00'),
         },
         {
           label: ({ width }: { width: number }) => (
             <button style={{ width, textAlign: 'left' }}>Cleaning4</button>
           ),
-          startAt: new Date('2022-08-25T20:00:00'),
-          endAt: new Date('2022-08-27'),
-        },
-        {
-          label: <button>Cleaning5</button>,
-          startAt: new Date('2022-08-18T22:00:00'),
-          endAt: new Date('2022-08-27'),
+          startAt: new Date('2022-09-25T20:00:00'),
+          endAt: new Date('2022-09-27T00:00:00'),
         },
       ],
     },
@@ -97,8 +94,8 @@ const args = {
       events: [
         {
           label: 'Cleaning3',
-          startAt: new Date('2022-09-07T16:00:00'),
-          endAt: new Date('2022-09-09'),
+          startAt: new Date('2022-09-28T16:00:00'),
+          endAt: new Date('2022-09-29T16:00:00'),
         },
       ],
     },

@@ -6,6 +6,7 @@ import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
 import produce from 'immer'
 import React, { useCallback, useState } from 'react'
+import { useEvent } from './hooks/useEvent'
 import { useRowContents } from './hooks/useRowContents'
 import { useRowHeads } from './hooks/useRowHeads'
 import { useTableRows } from './hooks/useTableRows'
@@ -61,6 +62,7 @@ export const ReactGanttCalendar = (props: Props) => {
   const { makeRowContents } = useRowContents()
   const { makeRowHeads } = useRowHeads()
   const { makeTableRows } = useTableRows()
+  const { calcEventWidth } = useEvent()
   const { columns } = props
   const displayRangeNumber = props.displayRangeNumber ?? 3
   const displayRangeUnitNumber = props.displayRangeUnitNumber ?? 1
@@ -82,16 +84,7 @@ export const ReactGanttCalendar = (props: Props) => {
     displayRangeUnit
   )
   const rowHeads = makeRowHeads(props.rowHeads, rowContents)
-  const calcWidth = (event: Event) => {
-    const start = startDate.isSameOrAfter(event.startAt, displayRangeUnit)
-      ? startDate
-      : event.startAt
-    const end = endDate.isSameOrBefore(event.endAt, displayRangeUnit)
-      ? endDate
-      : event.endAt
-    const diff = dayjs(end).diff(start, displayRangeUnit)
-    return diff < 1 ? tableDataWidth : tableDataWidth * diff
-  }
+  const calcWidth = calcEventWidth(startDate, endDate, displayRangeUnit)
 
   const renderedHeadIds: RowHead['id'][] = []
   const tableRows: TableRow[] = makeTableRows(
@@ -241,12 +234,12 @@ export const ReactGanttCalendar = (props: Props) => {
                       eventStartPositions.length !== 0
                         ? eventStartPositions[index][eventIndex]
                         : 0,
-                    width: calcWidth(event),
+                    width: calcWidth(event) * tableDataWidth,
                   }}
                 >
                   {typeof event.label === 'string'
                     ? event.label
-                    : event.label({ width: calcWidth(event) })}
+                    : event.label({ width: calcWidth(event) * tableDataWidth })}
                 </div>
               ))}
             </td>
