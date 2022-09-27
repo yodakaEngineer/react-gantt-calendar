@@ -30,7 +30,7 @@
     "build-storybook": "build-storybook",
     "prepare": "rm -rf dist types && tsc && vite build",
     "format": "prettier --write --ignore-path .gitignore './**/*.{js,jsx,ts,tsx,json,css,scss}'",
-    "test": "vitest",
+    "test": "TZ=utc vitest",
     "coverage": "vitest run --coverage"
   },
   "peerDependencies": {
