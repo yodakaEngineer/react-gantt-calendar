@@ -14,7 +14,9 @@ export const changeStartAndEnd = (
 ): ReturnType => {
   const eventStart = dayjs(event.startAt)
   const eventEnd = dayjs(event.endAt)
-  const start = eventStart.isSameOrBefore(startDate) ? startDate : eventStart
+  const start = eventStart.isSameOrBefore(startDate)
+    ? startDate
+    : eventStart.startOf(displayRangeUnit)
   const end = eventEnd.isSameOrAfter(endDate)
     ? endDate
     : eventEnd.isSame(eventEnd.startOf(displayRangeUnit))
