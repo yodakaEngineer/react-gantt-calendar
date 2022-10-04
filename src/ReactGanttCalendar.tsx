@@ -64,7 +64,7 @@ export const ReactGanttCalendar = (props: Props) => {
   const { makeTableRows } = useTableRows()
   const { calcEventWidth } = useEvent()
   const { columns } = props
-  const displayRangeNumber = props.displayRangeNumber ?? 3
+  const displayRangeNumber = props.displayRangeNumber ?? 30
   const displayRangeUnitNumber = props.displayRangeUnitNumber ?? 1
   const displayRange = [...Array(displayRangeNumber)].map(
     (_, i) => i * displayRangeUnitNumber

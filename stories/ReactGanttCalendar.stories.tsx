@@ -66,9 +66,9 @@ const args = {
       headIds: ['1', '1', '1'],
       events: [
         {
-          label: 'Cleaning1',
-          startAt: new Date('2022-09-25T16:00:00'),
-          endAt: new Date('2022-09-27T00:00:00'),
+          label: 'Before',
+          startAt: dayjs().subtract(2, 'day').toDate(),
+          endAt: dayjs().toDate(),
         },
       ],
     },
@@ -76,16 +76,17 @@ const args = {
       headIds: ['1', '1', '2'],
       events: [
         {
-          label: 'Cleaning2',
-          startAt: new Date('2022-09-25T23:00:00'),
-          endAt: new Date('2022-09-28T00:00:00'),
+          label: 'Between',
+          startAt: dayjs().subtract(3, 'day').toDate(),
+          // If we update storybook 7.0, then we can use add. https://github.com/storybookjs/storybook/issues/12208
+          endAt: dayjs().subtract(-35, 'day').toDate(),
         },
         {
           label: ({ width }: { width: number }) => (
-            <button style={{ width, textAlign: 'left' }}>Cleaning4</button>
+            <button style={{ width, textAlign: 'left' }}>A day</button>
           ),
-          startAt: new Date('2022-09-25T20:00:00'),
-          endAt: new Date('2022-09-27T00:00:00'),
+          startAt: dayjs().subtract(-3, 'hour').toDate(),
+          endAt: dayjs().subtract(-8, 'hour').toDate(),
         },
       ],
     },
@@ -93,9 +94,9 @@ const args = {
       headIds: ['1', '2', '3'],
       events: [
         {
-          label: 'Cleaning3',
-          startAt: new Date('2022-09-28T16:00:00'),
-          endAt: new Date('2022-09-29T16:00:00'),
+          label: 'hoge',
+          startAt: dayjs().subtract(-3, 'day').subtract(-3, 'hour').toDate(),
+          endAt: dayjs().subtract(-8, 'day').toDate(),
         },
       ],
     },
