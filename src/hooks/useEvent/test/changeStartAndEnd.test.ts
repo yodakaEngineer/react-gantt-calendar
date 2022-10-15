@@ -94,16 +94,19 @@ test.each<
       end: dayjs('2022-08-24T01:00:00'),
     },
   ],
-])("Don't round up eventEnd %#", (start, end, eventStart, eventEnd, u, expected) => {
-  const unit = u as ManipulateType
-  const event: Event = {
-    label: '',
-    startAt: eventStart,
-    endAt: eventEnd,
-  }
+])(
+  "Don't round up eventEnd %#",
+  (start, end, eventStart, eventEnd, u, expected) => {
+    const unit = u as ManipulateType
+    const event: Event = {
+      label: '',
+      startAt: eventStart,
+      endAt: eventEnd,
+    }
 
-  expect(changeStartAndEnd(event, start, end, unit)).toEqual(expected)
-})
+    expect(changeStartAndEnd(event, start, end, unit)).toEqual(expected)
+  }
+)
 
 test.each<
   [
@@ -114,7 +117,7 @@ test.each<
     displayRangeUnit: ManipulateType,
     exptected: ReturnType<typeof changeStartAndEnd>
   ]
-  >([
+>([
   [
     dayjs('2022-08-23T00:00:00'),
     dayjs('2022-08-26T00:00:00'),
@@ -137,13 +140,16 @@ test.each<
       end: dayjs(new Date('2022-08-24T10:00:00')),
     },
   ],
-])("Round down eventStart %#", (start, end, eventStart, eventEnd, u, expected) => {
-  const unit = u as ManipulateType
-  const event: Event = {
-    label: '',
-    startAt: eventStart,
-    endAt: eventEnd,
-  }
+])(
+  'Round down eventStart %#',
+  (start, end, eventStart, eventEnd, u, expected) => {
+    const unit = u as ManipulateType
+    const event: Event = {
+      label: '',
+      startAt: eventStart,
+      endAt: eventEnd,
+    }
 
-  expect(changeStartAndEnd(event, start, end, unit)).toEqual(expected)
-})
+    expect(changeStartAndEnd(event, start, end, unit)).toEqual(expected)
+  }
+)

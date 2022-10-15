@@ -104,7 +104,9 @@ const args = {
 }
 
 const Template: ComponentStory<typeof ReactGanttCalendar> = (args) => (
-  <ReactGanttCalendar {...args} />
+  <div style={{ overflow: 'auto', width: '500px', height: '150px' }}>
+    <ReactGanttCalendar {...args} />
+  </div>
 )
 
 export const Default = Template.bind({})

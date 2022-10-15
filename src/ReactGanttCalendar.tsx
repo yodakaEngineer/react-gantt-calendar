@@ -93,6 +93,38 @@ export const ReactGanttCalendar = (props: Props) => {
     renderedHeadIds
   )
 
+  const [tableHeadLeftPositions, setTableHeadLeftPositions] = useState<
+    number[][]
+  >(tableRows.map((row) => row.tableHeads.map(() => 0)))
+  const measureLeft = useCallback(
+    (
+      node: HTMLTableHeaderCellElement | null,
+      rowIndex: number,
+      headIndex: number
+    ) => {
+      if (node != null) {
+        setTableHeadLeftPositions((prev) => {
+          prev[rowIndex][headIndex] = node.offsetLeft
+          return prev
+        })
+      }
+    },
+    [setTableHeadLeftPositions]
+  )
+
+  const [headLeftPositions, setHeadLeftPositions] = useState<number[]>([])
+  const measureHeadLeft = useCallback(
+    (node: HTMLTableHeaderCellElement | null, index: number) => {
+      if (node != null) {
+        setHeadLeftPositions((prev) => {
+          prev[index] = node.offsetLeft
+          return prev
+        })
+      }
+    },
+    [setHeadLeftPositions]
+  )
+
   const [heightList, setHeightList] = useState<number[][]>(
     tableRows.map((row) => row.tableContent.events.map(() => 0))
   )
@@ -161,12 +193,24 @@ export const ReactGanttCalendar = (props: Props) => {
       }}
     >
       <thead className={'RTLThead'}>
-        <tr className={'RTLTheadTr'}>
+        <tr
+          className={'RTLTheadTr'}
+          style={{
+            position: 'relative',
+          }}
+        >
           {columns.map((column, index) => (
             <th
               className={'RTLTheadTr__th'}
               key={`RTLTheadTr__th_${index}`}
-              style={{ width: tableDataWidth }}
+              ref={(ref) => measureHeadLeft(ref, index)}
+              style={{
+                position: 'sticky',
+                zIndex: 2,
+                top: 0,
+                width: tableDataWidth,
+                left: headLeftPositions[index],
+              }}
             >
               {column.label}
             </th>
@@ -177,7 +221,13 @@ export const ReactGanttCalendar = (props: Props) => {
               <td
                 key={'RTLDR_' + unit}
                 className={'RTLTheadTr__td'}
-                style={{ width: tableDataWidth, boxSizing: 'border-box' }}
+                style={{
+                  width: tableDataWidth,
+                  boxSizing: 'border-box',
+                  zIndex: 1,
+                  top: 0,
+                  position: 'sticky',
+                }}
               >
                 {date.format(dateColumnFormat)}
               </td>
@@ -194,12 +244,18 @@ export const ReactGanttCalendar = (props: Props) => {
               height: heightList[index].reduce((a, b) => a + b, 0),
             }}
           >
-            {row.tableHeads.map((head) => {
+            {row.tableHeads.map((head, headIndex) => {
               return (
                 <th
                   key={'RTLTH_' + head.id}
                   rowSpan={head.rowSpan}
                   className={'RTLTbodyTr__th'}
+                  ref={(ref) => measureLeft(ref, index, headIndex)}
+                  style={{
+                    position: 'sticky',
+                    zIndex: 1,
+                    left: tableHeadLeftPositions[index][headIndex],
+                  }}
                 >
                   {head.label}
                 </th>
@@ -229,7 +285,6 @@ export const ReactGanttCalendar = (props: Props) => {
                     typeof event.label === 'string' ? 'RTLevent' : undefined
                   }
                   style={{
-                    boxSizing: 'border-box',
                     marginLeft:
                       eventStartPositions.length !== 0
                         ? eventStartPositions[index][eventIndex]
@@ -239,7 +294,9 @@ export const ReactGanttCalendar = (props: Props) => {
                 >
                   {typeof event.label === 'string'
                     ? event.label
-                    : event.label({ width: calcWidth(event) * tableDataWidth })}
+                    : event.label({
+                        width: calcWidth(event) * tableDataWidth,
+                      })}
                 </div>
               ))}
             </td>
