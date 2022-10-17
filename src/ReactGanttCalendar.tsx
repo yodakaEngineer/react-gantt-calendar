@@ -22,7 +22,7 @@ export type RowHead = {
   rowSpan?: number
 }
 
-type EventLabelCallbackProps = {
+export type EventLabelCallbackProps = {
   width: number
 }
 
@@ -42,11 +42,11 @@ export type TableRow = {
   tableContent: RowContent
 }
 
-type Column = {
+export type Column = {
   label: string | React.ReactNode
 }
 
-type Props = {
+export type Props = {
   columns: Column[]
   rowHeads: RowHead[]
   rowContents: RowContent[]
@@ -241,7 +241,7 @@ export const ReactGanttCalendar = (props: Props) => {
             key={'RTLTR_' + index}
             style={{
               position: 'relative',
-              height: heightList[index].reduce((a, b) => a + b, 0),
+              height: heightList[index]?.reduce((a, b) => a + b, 0),
             }}
           >
             {row.tableHeads.map((head, headIndex) => {
