@@ -1,7 +1,7 @@
 {
   "name": "react-gantt-calendar",
   "type": "module",
-  "version": "0.3.13",
+  "version": "0.3.14",
   "types": "./types/main.d.ts",
   "files": [
     "/dist",
