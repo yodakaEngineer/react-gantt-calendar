@@ -179,7 +179,7 @@ export const ReactGanttCalendar = (props: Props) => {
         })
       }
     },
-    []
+    [setHeightList]
   )
 
   return (
