@@ -104,12 +104,14 @@ export const ReactGanttCalendar = (props: Props) => {
     ) => {
       if (node != null) {
         setTableHeadLeftPositions((prev) => {
-          prev[rowIndex][headIndex] = node.offsetLeft
+          if (!prev[rowIndex][headIndex]) {
+            prev[rowIndex][headIndex] = node.offsetLeft
+          }
           return prev
         })
       }
     },
-    [setTableHeadLeftPositions]
+    []
   )
 
   const [headLeftPositions, setHeadLeftPositions] = useState<number[]>([])
@@ -117,12 +119,14 @@ export const ReactGanttCalendar = (props: Props) => {
     (node: HTMLTableHeaderCellElement | null, index: number) => {
       if (node != null) {
         setHeadLeftPositions((prev) => {
-          prev[index] = node.offsetLeft
+          if (!prev[index]) {
+            prev[index] = node.offsetLeft
+          }
           return prev
         })
       }
     },
-    [setHeadLeftPositions]
+    []
   )
 
   const [heightList, setHeightList] = useState<number[][]>(
