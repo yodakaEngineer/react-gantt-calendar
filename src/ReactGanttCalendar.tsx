@@ -95,7 +95,7 @@ export const ReactGanttCalendar = (props: Props) => {
 
   const [tableHeadLeftPositions, setTableHeadLeftPositions] = useState<
     number[][]
-  >(tableRows.map((row) => row.tableHeads.map(() => 0)))
+  >(tableRows.map(() => []))
   const measureLeft = useCallback(
     (
       node: HTMLTableHeaderCellElement | null,
@@ -104,7 +104,7 @@ export const ReactGanttCalendar = (props: Props) => {
     ) => {
       if (node != null) {
         setTableHeadLeftPositions((prev) => {
-          if (!prev[rowIndex][headIndex]) {
+          if (prev[rowIndex][headIndex] == null) {
             prev[rowIndex][headIndex] = node.offsetLeft
           }
           return prev
@@ -119,7 +119,7 @@ export const ReactGanttCalendar = (props: Props) => {
     (node: HTMLTableHeaderCellElement | null, index: number) => {
       if (node != null) {
         setHeadLeftPositions((prev) => {
-          if (!prev[index]) {
+          if (prev[index] == null) {
             prev[index] = node.offsetLeft
           }
           return prev
