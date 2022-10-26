@@ -43,6 +43,19 @@ test('Returns true if the display period included of the end of event.', () => {
   expect(filter(event)).toBe(true)
 })
 
+test('Returns true if the display period included of the start of event.', () => {
+  const start = dayjs('2022-08-24T00:00:00')
+  const end = dayjs('2022-08-25T00:00:00')
+  const event: Event = {
+    label: '',
+    startAt: new Date('2022-08-24T06:00:00'),
+    endAt: new Date('2022-08-25T06:00:00'),
+  }
+  const filter = isEventInDisplayRange(start, end)
+
+  expect(filter(event)).toBe(true)
+})
+
 test('Returns false if the event duration is before the display period', () => {
   const start = dayjs('2022-08-24T00:00:00')
   const end = dayjs('2022-08-25T00:00:00')
