@@ -43,7 +43,7 @@ test('Returns false if the event duration is before the display period', () => {
   expect(filter(event)).toBe(false)
 })
 
-test('Returns false if the event duration is before the display period', () => {
+test('Returns false if the event duration is after the display period', () => {
   const start = dayjs('2022-08-24T00:00:00')
   const end = dayjs('2022-08-25T00:00:00')
   const event: Event = {
