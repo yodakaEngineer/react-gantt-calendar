@@ -1,5 +1,5 @@
 import produce from 'immer'
-import dayjs, { Dayjs, ManipulateType } from 'dayjs'
+import dayjs, { Dayjs } from 'dayjs'
 import { RowContent, RowHead } from '../../ReactGanttCalendar'
 import { isEventInDisplayRange } from './isEventInDisplayRange'
 
@@ -7,10 +7,9 @@ export const useRowContents = () => {
   const makeRowContents = (
     rowContents: RowContent[],
     startDate: Dayjs,
-    endDate: Dayjs,
-    displayRangeUnit: ManipulateType
+    endDate: Dayjs
   ): RowContent[] => {
-    const filter = isEventInDisplayRange(startDate, endDate, displayRangeUnit)
+    const filter = isEventInDisplayRange(startDate, endDate)
     return produce(rowContents, (draft) => {
       draft.forEach((content) => {
         content.events = content.events

@@ -1,24 +1,24 @@
-import dayjs, { Dayjs, ManipulateType } from 'dayjs'
+import dayjs, { Dayjs } from 'dayjs'
 import { Event } from '../../ReactGanttCalendar'
 
 export const isEventInDisplayRange =
-  (startDate: Dayjs, endDate: Dayjs, displayRangeUnit: ManipulateType) =>
+  (startDate: Dayjs, endDate: Dayjs) =>
   (event: Event): boolean => {
     const isDisplayRangeIncludeStart = dayjs(event.startAt).isBetween(
       startDate,
       endDate,
-      displayRangeUnit,
+      null,
       '[)'
     )
     const isDisplayRangeIncludeEnd = dayjs(event.endAt).isBetween(
       startDate,
       endDate,
-      displayRangeUnit,
+      null,
       '(]'
     )
     const isEventRangeIncludeDisplayRange =
-      dayjs(event.endAt).isSameOrAfter(endDate, displayRangeUnit) &&
-      dayjs(event.startAt).isSameOrBefore(startDate, displayRangeUnit)
+      dayjs(event.endAt).isSameOrAfter(endDate) &&
+      dayjs(event.startAt).isSameOrBefore(startDate)
     return (
       isDisplayRangeIncludeStart ||
       isDisplayRangeIncludeEnd ||

@@ -9,7 +9,7 @@ export default {
 }
 
 const args = {
-  startDate: dayjs().subtract(1, 'day').toDate(),
+  startDate: dayjs().startOf('day').toDate(),
   columns: [
     {
       label: 'Hotel',

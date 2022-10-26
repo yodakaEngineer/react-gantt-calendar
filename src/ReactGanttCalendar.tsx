@@ -77,12 +77,7 @@ export const ReactGanttCalendar = (props: Props) => {
     displayRangeUnit
   )
   const tableDataWidth = props.tableDataWidth ?? 60
-  const rowContents = makeRowContents(
-    props.rowContents,
-    startDate,
-    endDate,
-    displayRangeUnit
-  )
+  const rowContents = makeRowContents(props.rowContents, startDate, endDate)
   const rowHeads = makeRowHeads(props.rowHeads, rowContents)
   const calcWidth = calcEventWidth(startDate, endDate, displayRangeUnit)
 
