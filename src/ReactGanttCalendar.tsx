@@ -127,6 +127,18 @@ export const ReactGanttCalendar = (props: Props) => {
   const [heightList, setHeightList] = useState<number[][]>(
     tableRows.map((row) => row.tableContent.events.map(() => 0))
   )
+  const measureHeight = useCallback(
+    (node: HTMLDivElement | null, rowIndex: number, eventIndex: number) => {
+      if (node != null) {
+        setHeightList((prev) => {
+          return produce(prev, (draft) => {
+            draft[rowIndex][eventIndex] = node.offsetHeight
+          })
+        })
+      }
+    },
+    [setHeightList]
+  )
 
   const [eventStartPositions, setEventStartPositions] = useState<number[][]>(
     tableRows.map((row) => row.tableContent.events.map(() => 0))
@@ -167,18 +179,6 @@ export const ReactGanttCalendar = (props: Props) => {
       }
     },
     [tableRows, startDate, displayRangeUnit, displayRange]
-  )
-  const measureHeight = useCallback(
-    (node: HTMLDivElement | null, rowIndex: number, eventIndex: number) => {
-      if (node != null) {
-        setHeightList((prev) => {
-          return produce(prev, (draft) => {
-            draft[rowIndex][eventIndex] = node.offsetHeight
-          })
-        })
-      }
-    },
-    [setHeightList]
   )
 
   return (
@@ -253,7 +253,9 @@ export const ReactGanttCalendar = (props: Props) => {
                   style={{
                     position: 'sticky',
                     zIndex: 1,
-                    left: tableHeadLeftPositions[index][headIndex],
+                    left: tableHeadLeftPositions[index]
+                      ? tableHeadLeftPositions[index][headIndex]
+                      : 0,
                   }}
                 >
                   {head.label}
