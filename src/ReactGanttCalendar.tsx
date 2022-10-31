@@ -125,15 +125,16 @@ export const ReactGanttCalendar = (props: Props) => {
   )
 
   const [heightList, setHeightList] = useState<number[][]>(
-    tableRows.map((row) => row.tableContent.events.map(() => 0))
+    tableRows.map(() => [])
   )
   const measureHeight = useCallback(
     (node: HTMLDivElement | null, rowIndex: number, eventIndex: number) => {
       if (node != null) {
         setHeightList((prev) => {
-          return produce(prev, (draft) => {
-            draft[rowIndex][eventIndex] = node.offsetHeight
-          })
+          if (prev[rowIndex][eventIndex] == null) {
+            prev[rowIndex][eventIndex] = node.offsetHeight
+          }
+          return prev
         })
       }
     },
@@ -141,7 +142,7 @@ export const ReactGanttCalendar = (props: Props) => {
   )
 
   const [eventStartPositions, setEventStartPositions] = useState<number[][]>(
-    tableRows.map((row) => row.tableContent.events.map(() => 0))
+    tableRows.map(() => [])
   )
   const measureRef = useCallback(
     (
@@ -155,21 +156,23 @@ export const ReactGanttCalendar = (props: Props) => {
             tableRows.forEach((row, rowIndex) => {
               if (rowIndex === index) {
                 return row.tableContent.events.forEach((event, eventIndex) => {
-                  let matchedRangeIndex = displayRange.findIndex((unit) => {
-                    const current = startDate.add(unit, displayRangeUnit)
-                    const next = current.add(1, displayRangeUnit)
-                    return dayjs(event.startAt).isBetween(
-                      current,
-                      next,
-                      displayRangeUnit,
-                      '[)'
-                    )
-                  })
-                  // if it doesn't match, its startAt is before startDate. So it should be 0
-                  matchedRangeIndex =
-                    matchedRangeIndex === -1 ? 0 : matchedRangeIndex
-                  if (rangeIndex === matchedRangeIndex) {
-                    draft[index][eventIndex] = node.offsetLeft
+                  if (draft[index][eventIndex] == null) {
+                    let matchedRangeIndex = displayRange.findIndex((unit) => {
+                      const current = startDate.add(unit, displayRangeUnit)
+                      const next = current.add(1, displayRangeUnit)
+                      return dayjs(event.startAt).isBetween(
+                        current,
+                        next,
+                        displayRangeUnit,
+                        '[)'
+                      )
+                    })
+                    // if it doesn't match, its startAt is before startDate. So it should be 0
+                    matchedRangeIndex =
+                      matchedRangeIndex === -1 ? 0 : matchedRangeIndex
+                    if (rangeIndex === matchedRangeIndex) {
+                      draft[index][eventIndex] = node.offsetLeft
+                    }
                   }
                 })
               }
