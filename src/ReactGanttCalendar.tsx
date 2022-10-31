@@ -99,8 +99,8 @@ export const ReactGanttCalendar = (props: Props) => {
     ) => {
       if (node != null) {
         setTableHeadLeftPositions((prev) => {
-          if (prev[rowIndex][headIndex] == null) {
-            prev[rowIndex][headIndex] = node.offsetLeft
+          if (prev[rowIndex] != null) {
+            prev[rowIndex]![headIndex] = node.offsetLeft
           }
           return prev
         })
@@ -114,9 +114,7 @@ export const ReactGanttCalendar = (props: Props) => {
     (node: HTMLTableHeaderCellElement | null, index: number) => {
       if (node != null) {
         setHeadLeftPositions((prev) => {
-          if (prev[index] == null) {
-            prev[index] = node.offsetLeft
-          }
+          prev[index] = node.offsetLeft
           return prev
         })
       }
@@ -131,8 +129,8 @@ export const ReactGanttCalendar = (props: Props) => {
     (node: HTMLDivElement | null, rowIndex: number, eventIndex: number) => {
       if (node != null) {
         setHeightList((prev) => {
-          if (prev[rowIndex][eventIndex] == null) {
-            prev[rowIndex][eventIndex] = node.offsetHeight
+          if (prev[rowIndex] != null) {
+            prev[rowIndex]![eventIndex] = node.offsetHeight
           }
           return prev
         })
@@ -153,30 +151,32 @@ export const ReactGanttCalendar = (props: Props) => {
       if (node != null) {
         setEventStartPositions((prev) => {
           return produce(prev, (draft) => {
-            tableRows.forEach((row, rowIndex) => {
-              if (rowIndex === index) {
-                return row.tableContent.events.forEach((event, eventIndex) => {
-                  if (draft[index][eventIndex] == null) {
-                    let matchedRangeIndex = displayRange.findIndex((unit) => {
-                      const current = startDate.add(unit, displayRangeUnit)
-                      const next = current.add(1, displayRangeUnit)
-                      return dayjs(event.startAt).isBetween(
-                        current,
-                        next,
-                        displayRangeUnit,
-                        '[)'
-                      )
-                    })
-                    // if it doesn't match, its startAt is before startDate. So it should be 0
-                    matchedRangeIndex =
-                      matchedRangeIndex === -1 ? 0 : matchedRangeIndex
-                    if (rangeIndex === matchedRangeIndex) {
-                      draft[index][eventIndex] = node.offsetLeft
+            if (draft[index] != null) {
+              tableRows.forEach((row, rowIndex) => {
+                if (rowIndex === index) {
+                  return row.tableContent.events.forEach(
+                    (event, eventIndex) => {
+                      let matchedRangeIndex = displayRange.find((unit) => {
+                        const current = startDate.add(unit, displayRangeUnit)
+                        const next = current.add(1, displayRangeUnit)
+                        return dayjs(event.startAt).isBetween(
+                          current,
+                          next,
+                          displayRangeUnit,
+                          '[)'
+                        )
+                      })
+                      // if it doesn't match, its startAt is before startDate. So it should be 0
+                      matchedRangeIndex =
+                        matchedRangeIndex === -1 ? 0 : matchedRangeIndex
+                      if (rangeIndex === matchedRangeIndex) {
+                        draft[index]![eventIndex] = node.offsetLeft
+                      }
                     }
-                  }
-                })
-              }
-            })
+                  )
+                }
+              })
+            }
           })
         })
       }
@@ -257,7 +257,9 @@ export const ReactGanttCalendar = (props: Props) => {
                     position: 'sticky',
                     zIndex: 1,
                     left: tableHeadLeftPositions[index]
-                      ? tableHeadLeftPositions[index][headIndex]
+                      ? tableHeadLeftPositions[index]
+                        ? tableHeadLeftPositions[index]![headIndex]
+                        : 0
                       : 0,
                   }}
                 >
@@ -291,7 +293,9 @@ export const ReactGanttCalendar = (props: Props) => {
                   style={{
                     marginLeft:
                       eventStartPositions.length !== 0
-                        ? eventStartPositions[index][eventIndex]
+                        ? eventStartPositions[index]
+                          ? eventStartPositions[index]![eventIndex]
+                          : 0
                         : 0,
                     width: calcWidth(event) * tableDataWidth,
                   }}
