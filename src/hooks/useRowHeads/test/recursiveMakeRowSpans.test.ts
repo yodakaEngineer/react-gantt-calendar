@@ -5,6 +5,7 @@ test('Success', () => {
   const rowHead: RowHead = {
     id: '1-1',
     label: '',
+    leftIndex: 0,
   }
   const rowContents: RowContent[] = [
     {

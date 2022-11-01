@@ -4,7 +4,6 @@ import dayjs, { ManipulateType } from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
-import produce from 'immer'
 import React, { useCallback, useState } from 'react'
 import { useEvent } from './hooks/useEvent'
 import { useRowContents } from './hooks/useRowContents'
@@ -20,6 +19,7 @@ export type RowHead = {
   label: string | React.ReactNode
   childRowHeads?: RowHead[]
   rowSpan?: number
+  leftIndex: number
 }
 
 export type EventLabelCallbackProps = {
@@ -88,40 +88,6 @@ export const ReactGanttCalendar = (props: Props) => {
     renderedHeadIds
   )
 
-  const [tableHeadLeftPositions, setTableHeadLeftPositions] = useState<
-    number[][]
-  >(tableRows.map(() => []))
-  const measureLeft = useCallback(
-    (
-      node: HTMLTableHeaderCellElement | null,
-      rowIndex: number,
-      headIndex: number
-    ) => {
-      if (node != null) {
-        setTableHeadLeftPositions((prev) => {
-          if (prev[rowIndex] != null) {
-            prev[rowIndex]![headIndex] = node.offsetLeft
-          }
-          return prev
-        })
-      }
-    },
-    []
-  )
-
-  const [headLeftPositions, setHeadLeftPositions] = useState<number[]>([])
-  const measureHeadLeft = useCallback(
-    (node: HTMLTableHeaderCellElement | null, index: number) => {
-      if (node != null) {
-        setHeadLeftPositions((prev) => {
-          prev[index] = node.offsetLeft
-          return prev
-        })
-      }
-    },
-    []
-  )
-
   const [heightList, setHeightList] = useState<number[][]>(
     tableRows.map(() => [])
   )
@@ -129,60 +95,35 @@ export const ReactGanttCalendar = (props: Props) => {
     (node: HTMLDivElement | null, rowIndex: number, eventIndex: number) => {
       if (node != null) {
         setHeightList((prev) => {
-          if (prev[rowIndex] != null) {
+          if (
+            prev[rowIndex] != null &&
+            prev[rowIndex]![eventIndex] !== node.offsetHeight
+          ) {
             prev[rowIndex]![eventIndex] = node.offsetHeight
+            return [...prev]
           }
           return prev
         })
       }
     },
-    [setHeightList]
+    []
   )
 
-  const [eventStartPositions, setEventStartPositions] = useState<number[][]>(
-    tableRows.map(() => [])
-  )
-  const measureRef = useCallback(
-    (
-      node: HTMLTableDataCellElement | null,
-      index: number,
-      rangeIndex: number
-    ) => {
-      if (node != null) {
-        setEventStartPositions((prev) => {
-          return produce(prev, (draft) => {
-            if (draft[index] != null) {
-              tableRows.forEach((row, rowIndex) => {
-                if (rowIndex === index) {
-                  return row.tableContent.events.forEach(
-                    (event, eventIndex) => {
-                      let matchedRangeIndex = displayRange.find((unit) => {
-                        const current = startDate.add(unit, displayRangeUnit)
-                        const next = current.add(1, displayRangeUnit)
-                        return dayjs(event.startAt).isBetween(
-                          current,
-                          next,
-                          displayRangeUnit,
-                          '[)'
-                        )
-                      })
-                      // if it doesn't match, its startAt is before startDate. So it should be 0
-                      matchedRangeIndex =
-                        matchedRangeIndex === -1 ? 0 : matchedRangeIndex
-                      if (rangeIndex === matchedRangeIndex) {
-                        draft[index]![eventIndex] = node.offsetLeft
-                      }
-                    }
-                  )
-                }
-              })
-            }
-          })
-        })
-      }
-    },
-    [tableRows, startDate, displayRangeUnit, displayRange]
-  )
+  const eventStartPositions = tableRows.map((row) => {
+    return row.tableContent.events.map((event) => {
+      let matchedRangeIndex = displayRange.find((unit) => {
+        const current = startDate.add(unit, displayRangeUnit)
+        const next = current.add(1, displayRangeUnit)
+        return dayjs(event.startAt).isBetween(
+          current,
+          next,
+          displayRangeUnit,
+          '[)'
+        )
+      })
+      return matchedRangeIndex == null ? 0 : matchedRangeIndex
+    })
+  })
 
   return (
     <table
@@ -205,13 +146,12 @@ export const ReactGanttCalendar = (props: Props) => {
             <th
               className={'RTLTheadTr__th'}
               key={`RTLTheadTr__th_${index}`}
-              ref={(ref) => measureHeadLeft(ref, index)}
               style={{
                 position: 'sticky',
                 zIndex: 2,
                 top: 0,
                 width: tableDataWidth,
-                left: headLeftPositions[index],
+                left: index * tableDataWidth,
               }}
             >
               {column.label}
@@ -246,33 +186,24 @@ export const ReactGanttCalendar = (props: Props) => {
               height: heightList[index]?.reduce((a, b) => a + b, 0),
             }}
           >
-            {row.tableHeads.map((head, headIndex) => {
+            {row.tableHeads.map((head) => {
               return (
                 <th
                   key={'RTLTH_' + head.id}
                   rowSpan={head.rowSpan}
                   className={'RTLTbodyTr__th'}
-                  ref={(ref) => measureLeft(ref, index, headIndex)}
                   style={{
                     position: 'sticky',
                     zIndex: 1,
-                    left: tableHeadLeftPositions[index]
-                      ? tableHeadLeftPositions[index]
-                        ? tableHeadLeftPositions[index]![headIndex]
-                        : 0
-                      : 0,
+                    left: tableDataWidth * head.leftIndex,
                   }}
                 >
                   {head.label}
                 </th>
               )
             })}
-            {displayRange.map((unit, displayRangeIndex) => (
-              <td
-                key={'RTLDR_' + unit}
-                className={'RTLTbodyTr__td'}
-                ref={(ref) => measureRef(ref, index, displayRangeIndex)}
-              />
+            {displayRange.map((unit) => (
+              <td key={'RTLDR_' + unit} className={'RTLTbodyTr__td'} />
             ))}
             <td
               style={{
@@ -292,11 +223,8 @@ export const ReactGanttCalendar = (props: Props) => {
                   }
                   style={{
                     marginLeft:
-                      eventStartPositions.length !== 0
-                        ? eventStartPositions[index]
-                          ? eventStartPositions[index]![eventIndex]
-                          : 0
-                        : 0,
+                      tableDataWidth * columns.length +
+                      eventStartPositions[index]![eventIndex]! * tableDataWidth,
                     width: calcWidth(event) * tableDataWidth,
                   }}
                 >
