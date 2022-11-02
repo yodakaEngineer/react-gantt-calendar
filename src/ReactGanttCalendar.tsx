@@ -1,62 +1,19 @@
 // FIXME: I wanna allow user opt in.
 import './styles.scss'
-import dayjs, { ManipulateType } from 'dayjs'
+import dayjs from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
 import React, { useCallback, useState } from 'react'
 import { useEvent } from './hooks/useEvent'
-import { useRowContents } from './hooks/useRowContents'
+import { TableRow, useRowContents } from './hooks/useRowContents'
 import { useRowHeads } from './hooks/useRowHeads'
 import { useTableRows } from './hooks/useTableRows'
+import { Props, RowHead } from './types'
 
 dayjs.extend(isBetween)
 dayjs.extend(isSameOrAfter)
 dayjs.extend(isSameOrBefore)
-
-export type RowHead = {
-  id: string | number
-  label: string | React.ReactNode
-  childRowHeads?: RowHead[]
-  rowSpan?: number
-  leftIndex: number
-}
-
-export type EventLabelCallbackProps = {
-  width: number
-}
-
-export type Event = {
-  label: string | React.FC<EventLabelCallbackProps>
-  startAt: Date
-  endAt: Date
-}
-
-export type RowContent = {
-  headIds: RowHead['id'][]
-  events: Event[]
-}
-
-export type TableRow = {
-  tableHeads: RowHead[]
-  tableContent: RowContent
-}
-
-export type Column = {
-  label: string | React.ReactNode
-}
-
-export type Props = {
-  columns: Column[]
-  rowHeads: RowHead[]
-  rowContents: RowContent[]
-  startDate?: Date
-  displayRangeNumber?: number
-  displayRangeUnit?: ManipulateType
-  displayRangeUnitNumber?: number
-  dateColumnFormat?: string
-  tableDataWidth?: number
-}
 
 export const ReactGanttCalendar = (props: Props) => {
   const { makeRowContents } = useRowContents()

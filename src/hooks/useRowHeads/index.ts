@@ -1,19 +1,25 @@
-import produce from 'immer'
+import { createDraft, finishDraft } from 'immer'
 import { recursiveAddPrefixToHeadId } from './recursiveAddPrefixToHeadId'
-import { RowContent, RowHead } from '../../ReactGanttCalendar'
+import { RowContent, RowHead, RowHeadProp } from '../../types'
 import { recursiveMakeRowSpans } from './recursiveMakeRowSpans'
 import { recursiveMakeLeftIndex } from './recursiveMakeLeftIndex'
 
+export type FormattingRowHead = RowHeadProp &
+  Partial<Pick<RowHead, 'leftIndex' | 'rowSpan'>>
+
 export const useRowHeads = () => {
   const makeRowHeads = (
-    rowHeads: RowHead[],
+    rowHeads: RowHeadProp[],
     rowContents: RowContent[]
   ): RowHead[] => {
-    return produce(rowHeads, (draft) => {
-      draft.forEach((v) => recursiveMakeLeftIndex(v))
-      draft.forEach((v) => recursiveAddPrefixToHeadId(v))
-      draft.forEach((v) => recursiveMakeRowSpans(v, rowContents))
+    const draft = createDraft<FormattingRowHead[]>(rowHeads)
+    draft.forEach((v) => {
+      recursiveMakeLeftIndex(v)
+      recursiveAddPrefixToHeadId(v)
+      recursiveMakeRowSpans(v, rowContents)
     })
+    // TODO: remove as RowHead[]
+    return finishDraft(draft) as RowHead[]
   }
 
   return {

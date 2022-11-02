@@ -1,17 +1,15 @@
-import { RowHead } from '../../../ReactGanttCalendar'
+import { RowHeadProp } from '../../../types'
 import { recursiveAddPrefixToHeadId } from '../recursiveAddPrefixToHeadId'
 
 test('success', () => {
   const childRowHead = {
     id: 1,
     label: '',
-    leftIndex: 0,
   }
-  const rowHead: RowHead = {
+  const rowHead: RowHeadProp = {
     id: 1,
     label: '',
     childRowHeads: [childRowHead],
-    leftIndex: 1,
   }
 
   expect(recursiveAddPrefixToHeadId(rowHead)).toEqual({

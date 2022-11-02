@@ -1,4 +1,4 @@
-import { Event } from '../../ReactGanttCalendar'
+import { Event } from '../../types'
 import dayjs, { Dayjs, ManipulateType } from 'dayjs'
 
 type ReturnType = {

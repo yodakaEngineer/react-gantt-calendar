@@ -1,5 +1,5 @@
 import { changeStartAndEnd } from './changeStartAndEnd'
-import { Event } from '../../ReactGanttCalendar'
+import { Event } from '../../types'
 import { Dayjs, ManipulateType } from 'dayjs'
 import { calcEventWidthUnit } from './calcEventWidthUnit'
 

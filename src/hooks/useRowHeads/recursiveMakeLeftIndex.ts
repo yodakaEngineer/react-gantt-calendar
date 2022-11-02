@@ -1,6 +1,6 @@
-import {RowHead} from '../../ReactGanttCalendar'
+import { FormattingRowHead } from './index'
 
-export const recursiveMakeLeftIndex = (head: RowHead, index = -1) => {
+export const recursiveMakeLeftIndex = (head: FormattingRowHead, index = -1) => {
   index++
   if (head.childRowHeads) {
     head.childRowHeads = head.childRowHeads.map((v) =>

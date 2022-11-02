@@ -1,7 +1,9 @@
 import produce from 'immer'
 import dayjs, { Dayjs } from 'dayjs'
-import { RowContent, RowHead } from '../../ReactGanttCalendar'
+import { RowContent, RowHead } from '../../types'
 import { isEventInDisplayRange } from './isEventInDisplayRange'
+
+export * from './types'
 
 export const useRowContents = () => {
   const makeRowContents = (

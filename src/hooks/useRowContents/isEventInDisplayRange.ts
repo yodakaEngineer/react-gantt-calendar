@@ -1,5 +1,5 @@
 import dayjs, { Dayjs } from 'dayjs'
-import { Event } from '../../ReactGanttCalendar'
+import { Event } from '../../types'
 
 export const isEventInDisplayRange =
   (startDate: Dayjs, endDate: Dayjs) =>

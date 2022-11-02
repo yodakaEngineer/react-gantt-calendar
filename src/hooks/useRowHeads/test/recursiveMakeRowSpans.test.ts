@@ -1,11 +1,10 @@
-import { RowContent, RowHead } from '../../../ReactGanttCalendar'
+import { RowContent, RowHeadProp } from '../../../types'
 import { recursiveMakeRowSpans } from '../recursiveMakeRowSpans'
 
 test('Success', () => {
-  const rowHead: RowHead = {
+  const rowHead: RowHeadProp = {
     id: '1-1',
     label: '',
-    leftIndex: 0,
   }
   const rowContents: RowContent[] = [
     {

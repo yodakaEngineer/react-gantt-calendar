@@ -1,16 +1,15 @@
-import { RowContent, RowHead } from '../../ReactGanttCalendar'
+import { RowContent } from '../../types'
+import { FormattingRowHead } from './index'
 
 export const recursiveMakeRowSpans = (
-  head: RowHead,
+  head: FormattingRowHead,
   rowContents: RowContent[]
-): RowHead => {
+) => {
   if (head.childRowHeads) {
     head.childRowHeads = head.childRowHeads.map((v) =>
       recursiveMakeRowSpans(v, rowContents)
     )
   }
-  head.rowSpan = rowContents.filter((content) =>
-    content.headIds.includes(head.id)
-  ).length
+  head.rowSpan = rowContents.filter((v) => v.headIds.includes(head.id)).length
   return head
 }
