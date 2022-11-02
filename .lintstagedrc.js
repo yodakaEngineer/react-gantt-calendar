@@ -1,11 +1,6 @@
-import path from 'path'
-
-const buildEslintCommand = (filenames) =>
-  `eslint --fix ${filenames.map((f) => path.relative(process.cwd(), f))}`
-
 export default {
   'src/*.{js,jsx,ts,tsx}': [
-    buildEslintCommand,
+    'eslint --fix',
     "bash -c 'yarn tsc'",
     'yarn format',
   ],
