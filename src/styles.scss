@@ -13,32 +13,39 @@ $waikawa-gray-900: #2c324e;
   color: $waikawa-gray-100;
   font-size: small;
   overflow: scroll;
-  box-shadow: 0 0 21px -6px rgba(0,0,0,0.6);
+  box-shadow: 0 0 21px -6px rgba(0, 0, 0, 0.6);
 
   &TheadTr {
-    &__td,&__th {
+    &__td {
       padding: 0.4rem;
       text-align: center;
-      position: sticky;
-      top: 0;
-      z-index: 3;
       background: $waikawa-gray-700;
       border-right: 1px solid $waikawa-gray-400;
       border-bottom: 1px solid $waikawa-gray-400;
+      box-sizing: border-box;
+    }
+    &__th {
+      padding: 0.4rem;
+      text-align: center;
+      background: $waikawa-gray-700;
+      border-right: 1px solid $waikawa-gray-400;
+      border-bottom: 1px solid $waikawa-gray-400;
+      box-sizing: border-box;
     }
   }
   &TbodyTr {
-    &__td,&__th {
-      padding: 0.4rem;
-    }
     &__td {
+      padding: 0.4rem;
+      box-sizing: border-box;
       border-right: 1px solid $waikawa-gray-400;
       border-top: 1px solid $waikawa-gray-400;
     }
     &__th {
-      background: $waikawa-gray-500;
+      padding: 0.4rem;
+      box-sizing: border-box;
       border-right: 1px solid $waikawa-gray-400;
       border-top: 1px solid $waikawa-gray-400;
+      background: $waikawa-gray-500;
     }
   }
   &event {
