@@ -55,7 +55,7 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-react": "^7.31.10",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "husky": "^8.0.1",
+    "husky": "^8.0.2",
     "immer": "^9.0.16",
     "lint-staged": "^13.0.3",
     "prettier": "^2.7.1",
