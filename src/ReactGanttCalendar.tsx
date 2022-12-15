@@ -165,7 +165,10 @@ export const ReactGanttCalendar = (props: Props) => {
                 className={'RTLTbodyTr__td'}
                 style={{
                   width: tableDataWidth,
-                  height: heightList[index]!.reduce((a, b) => a + b, 0),
+                  height:
+                    heightList[index]!.reduce((a, b) => a + b, 0) === 0
+                      ? 0
+                      : undefined,
                 }}
               />
             ))}
