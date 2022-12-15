@@ -167,8 +167,8 @@ export const ReactGanttCalendar = (props: Props) => {
                   width: tableDataWidth,
                   height:
                     heightList[index]!.reduce((a, b) => a + b, 0) === 0
-                      ? 0
-                      : undefined,
+                      ? undefined
+                      : heightList[index]!.reduce((a, b) => a + b, 0),
                 }}
               />
             ))}
