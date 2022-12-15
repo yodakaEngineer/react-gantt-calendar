@@ -59,6 +59,22 @@ const args = {
     {
       id: '2',
       label: 'Hotel2',
+      childRowHeads: [
+        {
+          id: '3',
+          label: '1F',
+          childRowHeads: [
+            {
+              id: '5',
+              label: '101',
+            },
+            {
+              id: '6',
+              label: '102',
+            },
+          ],
+        },
+      ],
     },
   ],
   rowContents: [
@@ -92,6 +108,26 @@ const args = {
     },
     {
       headIds: ['1', '2', '3'],
+      events: [
+        {
+          label: 'hoge',
+          startAt: dayjs().subtract(-3, 'day').subtract(-3, 'hour').toDate(),
+          endAt: dayjs().subtract(-8, 'day').toDate(),
+        },
+      ],
+    },
+    {
+      headIds: ['2', '3', '5'],
+      events: [
+        {
+          label: 'hoge',
+          startAt: dayjs().subtract(-3, 'day').subtract(-3, 'hour').toDate(),
+          endAt: dayjs().subtract(-8, 'day').toDate(),
+        },
+      ],
+    },
+    {
+      headIds: ['2', '3', '6'],
       events: [
         {
           label: 'hoge',
