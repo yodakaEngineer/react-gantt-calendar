@@ -66,6 +66,31 @@ export const ReactGanttCalendar = (props: Props) => {
     []
   )
 
+  const [tHeadHeightList, setTHeadHeightList] = useState<number[]>([])
+  const measureTHeadHeight = useCallback(
+    (node: HTMLDivElement | null, rowIndex: number) => {
+      if (node != null) {
+        setTHeadHeightList((prev) => {
+          if (prev[rowIndex] !== node.offsetHeight) {
+            prev[rowIndex] = node.offsetHeight
+            return [...prev]
+          }
+          return prev
+        })
+      }
+    },
+    []
+  )
+
+  const calcHeight = useCallback(
+    (index: number) => {
+      const height = heightList[index]!.reduce((a, b) => a + b, 0)
+      const isAutoCalcHeight = height === 0 || tHeadHeightList[index]! > height
+      return isAutoCalcHeight ? undefined : height
+    },
+    [heightList, tHeadHeightList]
+  )
+
   const eventStartPositions = tableRows.map((row) => {
     return row.tableContent.events.map((event) => {
       let matchedRangeIndex = displayRange.find((unit) => {
@@ -142,9 +167,13 @@ export const ReactGanttCalendar = (props: Props) => {
       >
         {tableRows.map((row, index) => (
           <React.Fragment key={'RTLTR_' + index}>
-            {row.tableHeads.map((head) => {
+            {row.tableHeads.map((head, headIndex) => {
               return (
                 <div
+                  ref={(node) =>
+                    row.tableHeads.length - 1 === headIndex &&
+                    measureTHeadHeight(node, index)
+                  }
                   key={'RTLTH_' + head.id}
                   className={'RTLTbodyTr__th'}
                   style={{
@@ -165,10 +194,7 @@ export const ReactGanttCalendar = (props: Props) => {
                 className={'RTLTbodyTr__td'}
                 style={{
                   width: tableDataWidth,
-                  height:
-                    heightList[index]!.reduce((a, b) => a + b, 0) === 0
-                      ? undefined
-                      : heightList[index]!.reduce((a, b) => a + b, 0),
+                  height: calcHeight(index),
                 }}
               />
             ))}
