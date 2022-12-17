@@ -1,5 +1,5 @@
 // FIXME: I wanna allow user opt in.
-// import './styles.scss'
+import './styles.scss'
 import dayjs from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'

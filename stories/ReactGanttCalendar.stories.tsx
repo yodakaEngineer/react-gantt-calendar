@@ -58,7 +58,8 @@ const args = {
     },
     {
       id: '2',
-      label: 'HotelあおいうえおHotelあおいうえおHotelあおいうえおHotelあおいうえおHotelあおいうえお',
+      label:
+        'HotelあおいうえおHotelあおいうえおHotelあおいうえおHotelあおいうえおHotelあおいうえお',
       childRowHeads: [
         {
           id: '3',
