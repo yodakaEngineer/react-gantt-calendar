@@ -1,5 +1,5 @@
 // FIXME: I wanna allow user opt in.
-import './styles.scss'
+// import './styles.scss'
 import dayjs from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
@@ -51,6 +51,9 @@ export const ReactGanttCalendar = (props: Props) => {
   const measureHeight = useCallback(
     (node: HTMLDivElement | null, rowIndex: number, eventIndex: number) => {
       if (node != null) {
+        const targetList = heightList[rowIndex]
+        if (targetList == null || targetList[eventIndex] === node.offsetHeight)
+          return
         setHeightList((prev) => {
           if (
             prev[rowIndex] != null &&
@@ -63,13 +66,18 @@ export const ReactGanttCalendar = (props: Props) => {
         })
       }
     },
-    []
+    [heightList]
   )
 
   const [tHeadHeightList, setTHeadHeightList] = useState<number[]>([])
   const measureTHeadHeight = useCallback(
-    (node: HTMLDivElement | null, rowIndex: number) => {
+    (node: HTMLDivElement | null, rowIndex: number, headIndex: number) => {
       if (node != null) {
+        const target = tHeadHeightList[rowIndex]
+        const row = tableRows[rowIndex]
+        if (row == null || row.tableHeads.length - 1 === headIndex) return
+        if (target || target === node.offsetHeight) return
+
         setTHeadHeightList((prev) => {
           if (prev[rowIndex] !== node.offsetHeight) {
             prev[rowIndex] = node.offsetHeight
@@ -79,7 +87,7 @@ export const ReactGanttCalendar = (props: Props) => {
         })
       }
     },
-    []
+    [tHeadHeightList]
   )
 
   const calcHeight = useCallback(
@@ -170,10 +178,7 @@ export const ReactGanttCalendar = (props: Props) => {
             {row.tableHeads.map((head, headIndex) => {
               return (
                 <div
-                  ref={(node) =>
-                    row.tableHeads.length - 1 === headIndex &&
-                    measureTHeadHeight(node, index)
-                  }
+                  ref={(node) => measureTHeadHeight(node, index, headIndex)}
                   key={'RTLTH_' + head.id}
                   className={'RTLTbodyTr__th'}
                   style={{
