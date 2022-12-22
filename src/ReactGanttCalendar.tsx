@@ -44,6 +44,7 @@ export const ReactGanttCalendar = (props: Props) => {
     rowHeads,
     renderedHeadIds
   )
+  const TableHeadLastIndexes = tableRows.map((row) => row.tableHeads.length - 1)
 
   const [eventHeightList, setHeightList] = useState<number[][]>(
     tableRows.map(() => [])
@@ -74,8 +75,8 @@ export const ReactGanttCalendar = (props: Props) => {
     (node: HTMLDivElement | null, rowIndex: number, headIndex: number) => {
       if (node != null) {
         const target = tHeadHeightList[rowIndex]
-        const row = tableRows[rowIndex]
-        if (row == null || row.tableHeads.length - 1 === headIndex) return
+        const lastIndex = TableHeadLastIndexes[rowIndex]
+        if (lastIndex !== headIndex) return
         if (target || target === node.offsetHeight) return
 
         setTHeadHeightList((prev) => {
@@ -87,7 +88,7 @@ export const ReactGanttCalendar = (props: Props) => {
         })
       }
     },
-    [tHeadHeightList]
+    [tHeadHeightList, TableHeadLastIndexes]
   )
 
   const calcHeight = useCallback(
