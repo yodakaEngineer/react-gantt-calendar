@@ -3,7 +3,7 @@ import React from 'react'
 
 export type RowHead = {
   id: string | number
-  label: string | React.ReactNode
+  label: string | (() => React.ReactNode)
   childRowHeads?: RowHead[]
   rowSpan: number
   leftIndex: number
@@ -32,7 +32,7 @@ export type RowContent = {
 }
 
 export type Column = {
-  label: string | React.ReactNode
+  label: string | (() => React.ReactNode)
 }
 
 export type Props = {
