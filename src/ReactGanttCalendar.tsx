@@ -44,13 +44,17 @@ export const ReactGanttCalendar = (props: Props) => {
     rowHeads,
     renderedHeadIds
   )
+  const TableHeadLastIndexes = tableRows.map((row) => row.tableHeads.length - 1)
 
-  const [heightList, setHeightList] = useState<number[][]>(
+  const [eventHeightList, setHeightList] = useState<number[][]>(
     tableRows.map(() => [])
   )
-  const measureHeight = useCallback(
+  const measureEventHeight = useCallback(
     (node: HTMLDivElement | null, rowIndex: number, eventIndex: number) => {
       if (node != null) {
+        const targetList = eventHeightList[rowIndex]
+        if (targetList == null || targetList[eventIndex] === node.offsetHeight)
+          return
         setHeightList((prev) => {
           if (
             prev[rowIndex] != null &&
@@ -63,7 +67,37 @@ export const ReactGanttCalendar = (props: Props) => {
         })
       }
     },
-    []
+    [eventHeightList]
+  )
+
+  const [tHeadHeightList, setTHeadHeightList] = useState<number[]>([])
+  const measureTHeadHeight = useCallback(
+    (node: HTMLDivElement | null, rowIndex: number, headIndex: number) => {
+      if (node != null) {
+        const target = tHeadHeightList[rowIndex]
+        const lastIndex = TableHeadLastIndexes[rowIndex]
+        if (lastIndex !== headIndex) return
+        if (target || target === node.offsetHeight) return
+
+        setTHeadHeightList((prev) => {
+          if (prev[rowIndex] !== node.offsetHeight) {
+            prev[rowIndex] = node.offsetHeight
+            return [...prev]
+          }
+          return prev
+        })
+      }
+    },
+    [tHeadHeightList, TableHeadLastIndexes]
+  )
+
+  const calcHeight = useCallback(
+    (index: number) => {
+      const height = eventHeightList[index]!.reduce((a, b) => a + b, 0)
+      const isAutoCalcHeight = height === 0 || tHeadHeightList[index]! > height
+      return isAutoCalcHeight ? undefined : height
+    },
+    [eventHeightList, tHeadHeightList]
   )
 
   const eventStartPositions = tableRows.map((row) => {
@@ -83,119 +117,129 @@ export const ReactGanttCalendar = (props: Props) => {
   })
 
   return (
-    <table
-      className={'RTL'}
-      style={{
-        width: '100%',
-        tableLayout: 'fixed',
-        borderCollapse: 'separate',
-        borderSpacing: 0,
-      }}
-    >
-      <thead className={'RTLThead'}>
-        <tr
-          className={'RTLTheadTr'}
-          style={{
-            position: 'relative',
-          }}
-        >
-          {columns.map((column, index) => (
-            <th
-              className={'RTLTheadTr__th'}
-              key={`RTLTheadTr__th_${index}`}
-              style={{
-                position: 'sticky',
-                zIndex: 2,
-                top: 0,
-                width: tableDataWidth,
-                left: index * tableDataWidth,
-              }}
-            >
-              {column.label}
-            </th>
-          ))}
-          {displayRange.map((unit) => {
-            const date = startDate.add(unit, displayRangeUnit)
-            return (
-              <td
-                key={'RTLDR_' + unit}
-                className={'RTLTheadTr__td'}
-                style={{
-                  width: tableDataWidth,
-                  boxSizing: 'border-box',
-                  zIndex: 1,
-                  top: 0,
-                  position: 'sticky',
-                }}
-              >
-                {date.format(dateColumnFormat)}
-              </td>
-            )
-          })}
-        </tr>
-      </thead>
-      <tbody>
-        {tableRows.map((row, index) => (
-          <tr
-            key={'RTLTR_' + index}
+    <div className={'RTL'}>
+      <div
+        className={'RTLTheadTr'}
+        style={{
+          width: 'fit-content',
+          display: 'flex',
+          position: 'sticky',
+          top: 0,
+          zIndex: 2,
+        }}
+      >
+        {columns.map((column, index) => (
+          <div
+            className={'RTLTheadTr__th'}
+            key={`RTLTheadTr__th_${index}`}
             style={{
-              position: 'relative',
-              height: heightList[index]?.reduce((a, b) => a + b, 0),
+              position: 'sticky',
+              zIndex: 2,
+              top: 0,
+              width: tableDataWidth,
+              left: index * tableDataWidth,
             }}
           >
-            {row.tableHeads.map((head) => {
+            {column.label}
+          </div>
+        ))}
+        {displayRange.map((unit) => {
+          const date = startDate.add(unit, displayRangeUnit)
+          return (
+            <div
+              key={'RTLDR_' + unit}
+              className={'RTLTheadTr__td'}
+              style={{
+                width: tableDataWidth,
+                boxSizing: 'border-box',
+              }}
+            >
+              {date.format(dateColumnFormat)}
+            </div>
+          )
+        })}
+      </div>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: `repeat(${
+            displayRangeNumber + columns.length
+          }, 1fr)`,
+          gridTemplateRows: `repeat(${
+            tableRows.length
+          }, fit-content: ${Math.max(
+            ...eventHeightList.map((v) => v.reduce((a, b) => a + b, 0))
+          )})`,
+          position: 'relative',
+          width: 'fit-content',
+        }}
+      >
+        {tableRows.map((row, rowIndex) => (
+          <React.Fragment key={'RTLTR_' + rowIndex}>
+            {row.tableHeads.map((head, headIndex) => {
               return (
-                <th
+                <div
+                  ref={(node) => measureTHeadHeight(node, rowIndex, headIndex)}
                   key={'RTLTH_' + head.id}
-                  rowSpan={head.rowSpan}
                   className={'RTLTbodyTr__th'}
                   style={{
                     position: 'sticky',
                     zIndex: 1,
                     left: tableDataWidth * head.leftIndex,
+                    gridRow: 'span ' + head.rowSpan,
+                    width: tableDataWidth,
                   }}
                 >
                   {head.label}
-                </th>
+                </div>
               )
             })}
             {displayRange.map((unit) => (
-              <td key={'RTLDR_' + unit} className={'RTLTbodyTr__td'} />
+              <div
+                key={'RTLDR_' + unit}
+                className={'RTLTbodyTr__td'}
+                style={{
+                  width: tableDataWidth,
+                  height: calcHeight(rowIndex),
+                }}
+              />
             ))}
-            <td
-              style={{
-                width: '100%',
-                position: 'absolute',
-                top: 0,
-                bottom: 0,
-                left: 0,
-              }}
-            >
-              {row.tableContent.events.map((event, eventIndex) => (
-                <div
-                  ref={(ref) => measureHeight(ref, index, eventIndex)}
-                  key={`RTLevent_${eventIndex}`}
-                  className={
-                    typeof event.label === 'string' ? 'RTLevent' : undefined
-                  }
-                  style={{
-                    marginLeft:
-                      tableDataWidth * columns.length +
-                      eventStartPositions[index]![eventIndex]! * tableDataWidth,
-                    width: calcWidth(event) * tableDataWidth,
-                  }}
-                >
-                  {typeof event.label === 'string'
-                    ? event.label
-                    : event.label({
-                        width: calcWidth(event) * tableDataWidth,
-                      })}
-                </div>
-              ))}
-            </td>
-          </tr>
+            {row.tableContent.events.map((event, eventIndex) => (
+              <div
+                ref={(ref) => measureEventHeight(ref, rowIndex, eventIndex)}
+                key={`RTLevent_${eventIndex}`}
+                className={
+                  typeof event.label === 'string' ? 'RTLevent' : undefined
+                }
+                style={{
+                  width: calcWidth(event) * tableDataWidth,
+                  position: 'absolute',
+                  top: eventHeightList[rowIndex]!.slice(0, eventIndex).reduce(
+                    (a, b) => a + b,
+                    0
+                  ),
+                  gridColumn: `${
+                    eventStartPositions[rowIndex]![eventIndex]! +
+                    columns.length +
+                    1
+                  } / ${
+                    eventStartPositions[rowIndex]![eventIndex]! +
+                    columns.length +
+                    2
+                  }`,
+                  gridRow: `${rowIndex + 1} / ${rowIndex + 2}`,
+                }}
+              >
+                {typeof event.label === 'string'
+                  ? event.label
+                  : event.label({
+                      width: calcWidth(event) * tableDataWidth,
+                    })}
+              </div>
+            ))}
+          </React.Fragment>
         ))}
-      </tbody>
-    </table>
+      </div>
+    </div>
   )
 }
