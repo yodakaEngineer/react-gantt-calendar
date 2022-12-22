@@ -45,13 +45,13 @@ export const ReactGanttCalendar = (props: Props) => {
     renderedHeadIds
   )
 
-  const [heightList, setHeightList] = useState<number[][]>(
+  const [eventHeightList, setHeightList] = useState<number[][]>(
     tableRows.map(() => [])
   )
-  const measureHeight = useCallback(
+  const measureEventHeight = useCallback(
     (node: HTMLDivElement | null, rowIndex: number, eventIndex: number) => {
       if (node != null) {
-        const targetList = heightList[rowIndex]
+        const targetList = eventHeightList[rowIndex]
         if (targetList == null || targetList[eventIndex] === node.offsetHeight)
           return
         setHeightList((prev) => {
@@ -66,7 +66,7 @@ export const ReactGanttCalendar = (props: Props) => {
         })
       }
     },
-    [heightList]
+    [eventHeightList]
   )
 
   const [tHeadHeightList, setTHeadHeightList] = useState<number[]>([])
@@ -92,11 +92,11 @@ export const ReactGanttCalendar = (props: Props) => {
 
   const calcHeight = useCallback(
     (index: number) => {
-      const height = heightList[index]!.reduce((a, b) => a + b, 0)
+      const height = eventHeightList[index]!.reduce((a, b) => a + b, 0)
       const isAutoCalcHeight = height === 0 || tHeadHeightList[index]! > height
       return isAutoCalcHeight ? undefined : height
     },
-    [heightList, tHeadHeightList]
+    [eventHeightList, tHeadHeightList]
   )
 
   const eventStartPositions = tableRows.map((row) => {
@@ -167,18 +167,18 @@ export const ReactGanttCalendar = (props: Props) => {
           gridTemplateRows: `repeat(${
             tableRows.length
           }, fit-content: ${Math.max(
-            ...heightList.map((v) => v.reduce((a, b) => a + b, 0))
+            ...eventHeightList.map((v) => v.reduce((a, b) => a + b, 0))
           )})`,
           position: 'relative',
           width: 'fit-content',
         }}
       >
-        {tableRows.map((row, index) => (
-          <React.Fragment key={'RTLTR_' + index}>
+        {tableRows.map((row, rowIndex) => (
+          <React.Fragment key={'RTLTR_' + rowIndex}>
             {row.tableHeads.map((head, headIndex) => {
               return (
                 <div
-                  ref={(node) => measureTHeadHeight(node, index, headIndex)}
+                  ref={(node) => measureTHeadHeight(node, rowIndex, headIndex)}
                   key={'RTLTH_' + head.id}
                   className={'RTLTbodyTr__th'}
                   style={{
@@ -199,13 +199,13 @@ export const ReactGanttCalendar = (props: Props) => {
                 className={'RTLTbodyTr__td'}
                 style={{
                   width: tableDataWidth,
-                  height: calcHeight(index),
+                  height: calcHeight(rowIndex),
                 }}
               />
             ))}
             {row.tableContent.events.map((event, eventIndex) => (
               <div
-                ref={(ref) => measureHeight(ref, index, eventIndex)}
+                ref={(ref) => measureEventHeight(ref, rowIndex, eventIndex)}
                 key={`RTLevent_${eventIndex}`}
                 className={
                   typeof event.label === 'string' ? 'RTLevent' : undefined
@@ -213,20 +213,20 @@ export const ReactGanttCalendar = (props: Props) => {
                 style={{
                   width: calcWidth(event) * tableDataWidth,
                   position: 'absolute',
-                  top: heightList[index]!.slice(0, eventIndex).reduce(
+                  top: eventHeightList[rowIndex]!.slice(0, eventIndex).reduce(
                     (a, b) => a + b,
                     0
                   ),
                   gridColumn: `${
-                    eventStartPositions[index]![eventIndex]! +
+                    eventStartPositions[rowIndex]![eventIndex]! +
                     columns.length +
                     1
                   } / ${
-                    eventStartPositions[index]![eventIndex]! +
+                    eventStartPositions[rowIndex]![eventIndex]! +
                     columns.length +
                     2
                   }`,
-                  gridRow: `${index + 1} / ${index + 2}`,
+                  gridRow: `${rowIndex + 1} / ${rowIndex + 2}`,
                 }}
               >
                 {typeof event.label === 'string'
