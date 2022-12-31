@@ -12,7 +12,16 @@ const args = {
   startDate: dayjs().startOf('day').toDate(),
   columns: [
     {
-      label: 'Hotel',
+      label: () => (
+        <button
+          style={{
+            width: '100%',
+            height: '100%',
+          }}
+        >
+          Hotel1
+        </button>
+      ),
     },
     {
       label: 'Floor',
@@ -32,7 +41,16 @@ const args = {
           childRowHeads: [
             {
               id: '1',
-              label: '101',
+              label: () => (
+                <button
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                  }}
+                >
+                  101
+                </button>
+              ),
             },
             {
               id: '2',

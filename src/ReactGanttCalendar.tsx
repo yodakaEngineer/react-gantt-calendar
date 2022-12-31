@@ -130,7 +130,6 @@ export const ReactGanttCalendar = (props: Props) => {
       >
         {columns.map((column, index) => (
           <div
-            className={'RTLTheadTr__th'}
             key={`RTLTheadTr__th_${index}`}
             style={{
               position: 'sticky',
@@ -140,7 +139,11 @@ export const ReactGanttCalendar = (props: Props) => {
               left: index * tableDataWidth,
             }}
           >
-            {column.label}
+            {typeof column.label === 'string' ? (
+              <div className={'RTLTheadTr__th'}>{column.label}</div>
+            ) : (
+              column.label()
+            )}
           </div>
         ))}
         {displayRange.map((unit) => {
@@ -181,7 +184,6 @@ export const ReactGanttCalendar = (props: Props) => {
                 <div
                   ref={(node) => measureTHeadHeight(node, rowIndex, headIndex)}
                   key={'RTLTH_' + head.id}
-                  className={'RTLTbodyTr__th'}
                   style={{
                     position: 'sticky',
                     zIndex: 1,
@@ -190,7 +192,11 @@ export const ReactGanttCalendar = (props: Props) => {
                     width: tableDataWidth,
                   }}
                 >
-                  {head.label}
+                  {typeof head.label === 'string' ? (
+                    <div className={'RTLTbodyTr__th'}>{head.label}</div>
+                  ) : (
+                    head.label()
+                  )}
                 </div>
               )
             })}
