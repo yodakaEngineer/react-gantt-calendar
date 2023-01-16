@@ -56,7 +56,7 @@
     "eslint-plugin-react": "^7.31.11",
     "eslint-plugin-react-hooks": "^4.6.0",
     "husky": "^8.0.3",
-    "immer": "^9.0.17",
+    "immer": "^9.0.18",
     "lint-staged": "^13.1.0",
     "prettier": "^2.8.2",
     "react": "^18.2.0",
