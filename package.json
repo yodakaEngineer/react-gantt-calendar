@@ -67,6 +67,6 @@
     "vitest": "^0.26.3"
   },
   "dependencies": {
-    "dayjs": "^1.11.8"
+    "dayjs": "^1.11.9"
   }
 }
