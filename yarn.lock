@@ -9778,10 +9778,10 @@ sane@^4.0.3:
     minimist "^1.1.1"
     walker "~1.0.5"
 
-sass@^1.57.1:
-  version "1.57.1"
-  resolved "https://registry.yarnpkg.com/sass/-/sass-1.57.1.tgz#dfafd46eb3ab94817145e8825208ecf7281119b5"
-  integrity sha512-O2+LwLS79op7GI0xZ8fqzF7X2m/m8WFfI02dHOdsK5R2ECeS5F62zrwg/relM1rjSLy7Vd/DiMNIvPrQGsA0jw==
+sass@^1.66.0:
+  version "1.66.0"
+  resolved "https://registry.yarnpkg.com/sass/-/sass-1.66.0.tgz#74728eed49b0e490cd729c233e7f1c6ce356e638"
+  integrity sha512-C3U+RgpAAlTXULZkWwzfysgbbBBo8IZudNAOJAVBLslFbIaZv4MBPkTqhuvpK4lqgdoFiWhnOGMoV4L1FyOBag==
   dependencies:
     chokidar ">=3.0.0 <4.0.0"
     immutable "^4.0.0"
