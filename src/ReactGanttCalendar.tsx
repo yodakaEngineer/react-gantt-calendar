@@ -115,7 +115,7 @@ export const ReactGanttCalendar = (props: Props) => {
           '[)'
         )
       })
-      return matchedRangeIndex == null ? 0 : matchedRangeIndex
+      return matchedRangeIndex == -1 ? 0 : matchedRangeIndex
     })
   })
 
