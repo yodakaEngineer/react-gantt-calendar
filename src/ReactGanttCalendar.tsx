@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useEvent } from './hooks/useEvent'
 import { TableRow, useRowContents } from './hooks/useRowContents'
 import { useRowHeads } from './hooks/useRowHeads'
@@ -114,6 +114,15 @@ export const ReactGanttCalendar = (props: Props) => {
     })
   })
 
+  useEffect(() => {
+    if (eventHeightList.length !== tableRows.length) {
+      setHeightList(tableRows.map(() => []))
+    }
+  }, [eventHeightList, tableRows])
+
+  if (eventHeightList.length !== tableRows.length) {
+    return null
+  }
   return (
     <div className={'RTL'}>
       <div
