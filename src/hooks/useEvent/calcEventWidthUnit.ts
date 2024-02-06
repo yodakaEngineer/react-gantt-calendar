@@ -3,8 +3,10 @@ import dayjs, { Dayjs, ManipulateType } from 'dayjs'
 export const calcEventWidthUnit = (
   start: Dayjs,
   end: Dayjs,
-  displayRangeUnit: ManipulateType
+  displayRangeUnit: ManipulateType,
+  displayRangeUnitNumber: number
 ): number => {
-  const diff = dayjs(end).diff(start, displayRangeUnit)
+  let diff = dayjs(end).diff(start, displayRangeUnit)
+  diff = diff / displayRangeUnitNumber
   return diff < 1 ? 1 : diff
 }

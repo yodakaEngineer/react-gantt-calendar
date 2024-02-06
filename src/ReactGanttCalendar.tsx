@@ -34,7 +34,7 @@ export const ReactGanttCalendar = (props: Props) => {
   const tableDataWidth = props.tableDataWidth ?? 60
   const rowContents = makeRowContents(props.rowContents, startDate, endDate)
   const rowHeads = makeRowHeads(props.rowHeads, rowContents)
-  const calcWidth = calcEventWidth(startDate, endDate, displayRangeUnit)
+  const calcWidth = calcEventWidth(startDate, endDate, displayRangeUnit, displayRangeUnitNumber)
 
   const renderedHeadIds: RowHead['id'][] = []
   const tableRows: TableRow[] = makeTableRows(
@@ -100,7 +100,7 @@ export const ReactGanttCalendar = (props: Props) => {
 
   const eventStartPositions = tableRows.map((row) => {
     return row.tableContent.events.map((event) => {
-      let matchedRangeIndex = displayRange.find((unit) => {
+      let matchedRangeIndex = displayRange.findIndex((unit) => {
         const current = startDate.add(unit, displayRangeUnit)
         const next = current.add(1, displayRangeUnit)
         return dayjs(event.startAt).isBetween(

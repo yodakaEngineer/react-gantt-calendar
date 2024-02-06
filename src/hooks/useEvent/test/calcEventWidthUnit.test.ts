@@ -5,5 +5,5 @@ test('Even if the event is less than one unit from start to end, it is still con
   const start = dayjs('2022-08-22T00:00:00')
   const end = dayjs('2022-08-22T04:00:00')
 
-  expect(calcEventWidthUnit(start, end, 'day')).toBe(1)
+  expect(calcEventWidthUnit(start, end, 'day', 1)).toBe(1)
 })
