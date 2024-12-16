@@ -107,7 +107,7 @@ export const ReactGanttCalendar = (props: Props) => {
     return row.tableContent.events.map((event) => {
       let matchedRangeIndex = displayRange.findIndex((unit) => {
         const current = startDate.add(unit, displayRangeUnit)
-        const next = current.add(1, displayRangeUnit)
+        const next = current.add(1 * displayRangeUnitNumber, displayRangeUnit)
         return dayjs(event.startAt).isBetween(
           current,
           next,
