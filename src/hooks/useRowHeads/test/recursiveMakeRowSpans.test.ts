@@ -21,7 +21,7 @@ test('Success', () => {
     },
   ]
 
-  expect(recursiveMakeRowSpans(rowHead, rowContents)).toContain({
+  expect(recursiveMakeRowSpans(rowHead, rowContents)).toEqual({
     id: '1-1',
     label: '',
     rowSpan: 3,
