@@ -1,5 +1,3 @@
-/// <reference types="vitest" />
-
 import { ModuleFormat } from 'rollup'
 
 import path from 'path'
@@ -8,26 +6,21 @@ import { defineConfig } from 'vite'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  test: {
-    globals: true,
-    setupFiles: './src/setup.ts',
-  },
-  plugins: [
-    react({
-      jsxRuntime: 'classic',
-    }),
-  ],
+  plugins: [react()],
   build: {
+    minify: false,
     lib: {
       entry: path.resolve(__dirname, 'src/main.ts'),
       name: 'ReactGanttCalendar',
       fileName: (format: ModuleFormat) => `index.${format}.js`,
+      cssFileName: 'style',
     },
     rollupOptions: {
-      external: ['react'],
+      external: ['react', 'react-dom'],
       output: {
         globals: {
           react: 'React',
+          'react-dom': 'ReactDOM',
         },
       },
     },
