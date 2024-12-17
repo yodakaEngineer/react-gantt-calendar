@@ -1,3 +1,4 @@
+import React from 'react'
 import { ComponentStory } from '@storybook/react'
 import { ReactGanttCalendar } from '../src/ReactGanttCalendar'
 import '../src/styles.scss'
@@ -8,8 +9,31 @@ export default {
   title: 'ReactGanttCalendar',
 }
 
-const args = {
+const startAt = dayjs().startOf('day').subtract(-30, 'minute').toDate()
+const endAt = dayjs().startOf('day').subtract(-60, 'minute').toDate()
+
+// minute
+const setting = {
+  displayRangeUnit: 'minute',
+  displayRangeUnitNumber: 30,
+  displayRange: 'minute',
+  displayRangeNumber: 30,
+  dateColumnFormat: 'HH:mm',
   startDate: dayjs().startOf('day').toDate(),
+}
+
+// day
+// const setting = {
+//   displayRangeUnit: 'day',
+//   displayRangeUnitNumber: 1,
+//   displayRange: 'day',
+//   displayRangeNumber: 30,
+//   dateColumnFormat: 'MM/DD',
+//   startDate: dayjs().startOf('day').toDate(),
+// }
+
+const args = {
+  ...setting,
   columns: [
     {
       label: () => (
@@ -118,10 +142,10 @@ const args = {
         },
         {
           label: ({ width }: { width: number }) => (
-            <button style={{ width, textAlign: 'left' }}>A day</button>
+            <button style={{ width, textAlign: 'left' }}>Flexible</button>
           ),
-          startAt: dayjs().subtract(-3, 'hour').toDate(),
-          endAt: dayjs().subtract(-8, 'hour').toDate(),
+          startAt,
+          endAt,
         },
       ],
     },
