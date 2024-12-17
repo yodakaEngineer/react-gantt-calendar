@@ -34,11 +34,15 @@ export const ReactGanttCalendar = (props: Props) => {
   const tableDataWidth = props.tableDataWidth ?? 60
   const rowContents = makeRowContents(props.rowContents, startDate, endDate)
   const rowHeads = makeRowHeads(props.rowHeads, rowContents)
+  const displayRangeDateTimes = displayRange.map((unit) => {
+    return startDate.add(unit, displayRangeUnit)
+  })
   const calcWidth = calcEventWidth(
     startDate,
     endDate,
     displayRangeUnit,
-    displayRangeUnitNumber
+    displayRangeUnitNumber,
+    displayRangeDateTimes
   )
 
   const renderedHeadIds: RowHead['id'][] = []
@@ -158,11 +162,10 @@ export const ReactGanttCalendar = (props: Props) => {
             )}
           </div>
         ))}
-        {displayRange.map((unit) => {
-          const date = startDate.add(unit, displayRangeUnit)
+        {displayRangeDateTimes.map((date) => {
           return (
             <div
-              key={'RTLDR_' + unit}
+              key={'RTLDR_' + date.format('HH:mm')}
               className={'RTLTheadTr__td'}
               style={{
                 width: tableDataWidth,
