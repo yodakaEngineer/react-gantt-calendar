@@ -9,7 +9,8 @@ export const useEvent = () => {
       startDate: Dayjs,
       endDate: Dayjs,
       displayRangeUnit: ManipulateType,
-      displayRangeUnitNumber: number
+      displayRangeUnitNumber: number,
+      displayRangeDateTimes: Dayjs[]
     ) =>
     (event: Event) => {
       const { start, end } = changeStartAndEnd(
@@ -22,7 +23,8 @@ export const useEvent = () => {
         start,
         end,
         displayRangeUnit,
-        displayRangeUnitNumber
+        displayRangeUnitNumber,
+        displayRangeDateTimes
       )
     }
 

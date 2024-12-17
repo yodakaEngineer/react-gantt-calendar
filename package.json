@@ -1,8 +1,8 @@
 {
   "name": "react-gantt-calendar",
   "type": "module",
-  "version": "0.4.12",
-  "types": "./types/main.d.ts",
+  "version": "0.4.15",
+  "types": "./dist/index.d.ts",
   "files": [
     "/dist",
     "/types"
@@ -11,8 +11,9 @@
   "module": "./dist/index.es.js",
   "exports": {
     ".": {
-      "import": "./dist/index.es.js",
-      "require": "./dist/index.umd.js"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.umd.cjs"
     },
     "./dist/style.css": {
       "import": "./dist/style.css",
@@ -64,6 +65,7 @@
     "sass": "^1.57.1",
     "typescript": "^4.9.5",
     "vite": "^6.0.3",
+    "vite-plugin-dts": "^4.3.0",
     "vitest": "^2.0.5"
   },
   "dependencies": {
