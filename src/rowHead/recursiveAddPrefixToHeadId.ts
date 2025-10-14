@@ -1,4 +1,4 @@
-import { RowHeadProp } from '../../types'
+import { RowHeadProp } from '../types'
 // Make HeadId unique across Heads. (HeadId is unique only same level.)
 export const recursiveAddPrefixToHeadId = (
   head: RowHeadProp,

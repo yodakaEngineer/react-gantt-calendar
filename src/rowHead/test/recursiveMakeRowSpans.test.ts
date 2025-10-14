@@ -1,4 +1,4 @@
-import { RowContent, RowHeadProp } from '../../../types'
+import { RowContent, RowHeadProp } from '../../types'
 import { recursiveMakeRowSpans } from '../recursiveMakeRowSpans'
 
 test('Success', () => {

@@ -3,10 +3,10 @@ import isBetween from 'dayjs/plugin/isBetween'
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
 import React, { useCallback, useEffect, useState } from 'react'
-import { useEvent } from './hooks/useEvent'
-import { TableRow, useRowContents } from './hooks/useRowContents'
-import { useRowHeads } from './hooks/useRowHeads'
-import { useTableRows } from './hooks/useTableRows'
+import { calcEventWidth } from './event'
+import { makeRowContents, TableRow } from './rowContent'
+import { makeRowHeads } from './rowHead'
+import { makeTableRows } from './tableRow'
 import { Props, RowHead } from './types'
 
 dayjs.extend(isBetween)
@@ -14,10 +14,6 @@ dayjs.extend(isSameOrAfter)
 dayjs.extend(isSameOrBefore)
 
 export const ReactGanttCalendar = ({ options = {}, data }: Props) => {
-  const { makeRowContents } = useRowContents()
-  const { makeRowHeads } = useRowHeads()
-  const { makeTableRows } = useTableRows()
-  const { calcEventWidth } = useEvent()
   const { columns, rows } = data
   const displayRangeNumber = options.displayRange?.range ?? 30
   const displayRangeUnitNumber = options.displayRange?.unitNumber ?? 1

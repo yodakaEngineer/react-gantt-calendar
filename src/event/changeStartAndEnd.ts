@@ -1,5 +1,5 @@
-import { Event } from '../../types'
 import dayjs, { Dayjs, ManipulateType } from 'dayjs'
+import { Event } from '../types'
 
 type ReturnType = {
   start: Dayjs

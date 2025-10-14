@@ -1,5 +1,5 @@
-import { RowContent, RowHead } from '../../types'
-import { TableRow } from '../useRowContents'
+import { TableRow } from '../rowContent'
+import { RowContent, RowHead } from '../types'
 
 export const recursiveMakeTableRows = (
   content: RowContent,

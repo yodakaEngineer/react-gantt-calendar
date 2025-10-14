@@ -1,5 +1,5 @@
-import { Event } from '../../../types'
 import dayjs from 'dayjs'
+import { Event } from '../../types'
 import { isEventInDisplayRange } from '../isEventInDisplayRange'
 
 // Edit an assertion and save to see HMR in action

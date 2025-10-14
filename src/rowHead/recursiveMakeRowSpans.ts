@@ -1,4 +1,4 @@
-import { RowContent } from '../../types'
+import { RowContent } from '../types'
 import { FormattingRowHead } from './index'
 
 export const recursiveMakeRowSpans = (

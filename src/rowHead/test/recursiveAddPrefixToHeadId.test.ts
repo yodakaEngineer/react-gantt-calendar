@@ -1,4 +1,4 @@
-import { RowHeadProp } from '../../../types'
+import { RowHeadProp } from '../../types'
 import { recursiveAddPrefixToHeadId } from '../recursiveAddPrefixToHeadId'
 
 test('success', () => {
