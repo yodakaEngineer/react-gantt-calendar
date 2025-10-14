@@ -12,8 +12,8 @@ export const recursiveMakeTableRows = (
       row.tableHeads.push(head)
       renderedHeadIds.push(head.id)
     }
-    if (head.childRowHeads) {
-      head.childRowHeads.forEach((childHead) => {
+    if (head.children) {
+      head.children.forEach((childHead) => {
         recursiveMakeTableRows(content, childHead, renderedHeadIds, row)
       })
     }

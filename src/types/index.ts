@@ -4,16 +4,16 @@ import React from 'react'
 export type RowHead = {
   id: string | number
   label: string | (() => React.ReactNode)
-  childRowHeads?: RowHead[]
+  children?: RowHead[]
   rowSpan: number
   leftIndex: number
 }
 
 export type RowHeadProp = Omit<
   RowHead,
-  'childRowHeads' | 'rowSpan' | 'leftIndex'
+  'children' | 'rowSpan' | 'leftIndex'
 > & {
-  childRowHeads?: RowHeadProp[]
+  children?: RowHeadProp[]
 }
 
 export type EventLabelCallbackProps = {

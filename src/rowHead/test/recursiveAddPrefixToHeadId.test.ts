@@ -9,13 +9,13 @@ test('success', () => {
   const rowHead: RowHeadProp = {
     id: 1,
     label: '',
-    childRowHeads: [childRowHead],
+    children: [childRowHead],
   }
 
   expect(recursiveAddPrefixToHeadId(rowHead)).toEqual({
     id: 1,
     label: '',
-    childRowHeads: [
+    children: [
       {
         id: '1_1',
         label: '',

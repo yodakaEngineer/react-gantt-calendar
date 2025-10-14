@@ -7,8 +7,8 @@ export const recursiveAddPrefixToHeadId = (
   if (parentHead?.id) {
     head.id = `${parentHead.id}_${head.id}`
   }
-  if (head.childRowHeads) {
-    head.childRowHeads = head.childRowHeads.map((v) =>
+  if (head.children) {
+    head.children = head.children.map((v) =>
       recursiveAddPrefixToHeadId(v, head)
     )
   }

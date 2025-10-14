@@ -5,8 +5,8 @@ export const recursiveMakeRowSpans = (
   head: FormattingRowHead,
   rowContents: RowContent[]
 ) => {
-  if (head.childRowHeads) {
-    head.childRowHeads = head.childRowHeads.map((v) =>
+  if (head.children) {
+    head.children = head.children.map((v) =>
       recursiveMakeRowSpans(v, rowContents)
     )
   }

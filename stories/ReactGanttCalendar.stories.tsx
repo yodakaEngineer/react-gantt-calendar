@@ -58,11 +58,11 @@ const args = {
         {
           id: '1',
           label: 'Hotel1',
-          childRowHeads: [
+          children: [
             {
               id: '1',
               label: '1F',
-              childRowHeads: [
+              children: [
                 {
                   id: '1',
                   label: () => (
@@ -85,7 +85,7 @@ const args = {
             {
               id: '2',
               label: '2F',
-              childRowHeads: [
+              children: [
                 {
                   id: '3',
                   label: '201',
@@ -102,11 +102,11 @@ const args = {
           id: '2',
           label:
             'HotelあおいうえおHotelあおいうえおHotelあおいうえおHotelあおいうえおHotelあおいうえお',
-          childRowHeads: [
+          children: [
             {
               id: '3',
               label: '1F',
-              childRowHeads: [
+              children: [
                 {
                   id: '5',
                   label: '101',

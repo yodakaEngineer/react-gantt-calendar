@@ -39,11 +39,11 @@ function App() {
             {
               id: '1',
               label: 'Hotel 1',
-              childRowHeads: [
+              children: [
                 {
                   id: '1-1',
                   label: '1F',
-                  childRowHeads: [
+                  children: [
                     { id: '1-1-1', label: 'Room 101' },
                     { id: '1-1-2', label: 'Room 102' }
                   ]
@@ -139,7 +139,7 @@ function App() {
 {
   id: string | number
   label: string | (() => React.ReactNode)
-  childRowHeads?: RowHeadProp[]
+  children?: RowHeadProp[]
 }
 ```
 
