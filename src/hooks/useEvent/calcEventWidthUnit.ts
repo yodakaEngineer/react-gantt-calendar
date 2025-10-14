@@ -11,7 +11,7 @@ export const calcEventWidthUnit = (
     range,
     range.add(displayRangeUnitNumber, displayRangeUnit),
   ])
-  
+
   const startRange = rangeList.find(([rangeStart, rangeEnd]) =>
     dayjs(start).isBetween(rangeStart, rangeEnd, null, '()')
   )

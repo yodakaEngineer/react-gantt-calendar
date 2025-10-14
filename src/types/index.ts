@@ -35,14 +35,30 @@ export type Column = {
   label: string | (() => React.ReactNode)
 }
 
-export type Props = {
+export type DisplayRange = {
+  range: number
+  unit: ManipulateType
+  unitNumber: number
+  format: string
+}
+
+export type Options = {
+  displayRange?: DisplayRange
+  tableCellWidth?: number
+  startDate?: Date | string
+}
+
+export type Rows = {
+  heads: RowHeadProp[]
+  contents: RowContent[]
+}
+
+export type Data = {
   columns: Column[]
-  rowHeads: RowHeadProp[]
-  rowContents: RowContent[]
-  startDate?: Date
-  displayRangeNumber?: number
-  displayRangeUnit?: ManipulateType
-  displayRangeUnitNumber?: number
-  dateColumnFormat?: string
-  tableDataWidth?: number
+  rows: Rows
+}
+
+export type Props = {
+  options?: Options
+  data: Data
 }

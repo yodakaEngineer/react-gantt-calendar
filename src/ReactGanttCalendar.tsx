@@ -13,27 +13,27 @@ dayjs.extend(isBetween)
 dayjs.extend(isSameOrAfter)
 dayjs.extend(isSameOrBefore)
 
-export const ReactGanttCalendar = (props: Props) => {
+export const ReactGanttCalendar = ({ options = {}, data }: Props) => {
   const { makeRowContents } = useRowContents()
   const { makeRowHeads } = useRowHeads()
   const { makeTableRows } = useTableRows()
   const { calcEventWidth } = useEvent()
-  const { columns } = props
-  const displayRangeNumber = props.displayRangeNumber ?? 30
-  const displayRangeUnitNumber = props.displayRangeUnitNumber ?? 1
+  const { columns, rows } = data
+  const displayRangeNumber = options.displayRange?.range ?? 30
+  const displayRangeUnitNumber = options.displayRange?.unitNumber ?? 1
   const displayRange = [...Array(displayRangeNumber)].map(
     (_, i) => i * displayRangeUnitNumber
   )
-  const displayRangeUnit = props.displayRangeUnit ?? 'day'
-  const dateColumnFormat = props.dateColumnFormat ?? 'MM/DD'
-  const startDate = dayjs(props.startDate).startOf(displayRangeUnit)
+  const displayRangeUnit = options.displayRange?.unit ?? 'day'
+  const dateColumnFormat = options.displayRange?.format ?? 'MM/DD'
+  const startDate = dayjs(options.startDate).startOf(displayRangeUnit)
   const endDate = startDate.add(
     displayRangeNumber * displayRangeUnitNumber,
     displayRangeUnit
   )
-  const tableDataWidth = props.tableDataWidth ?? 60
-  const rowContents = makeRowContents(props.rowContents, startDate, endDate)
-  const rowHeads = makeRowHeads(props.rowHeads, rowContents)
+  const tableDataWidth = options.tableCellWidth ?? 60
+  const rowContents = makeRowContents(rows.contents, startDate, endDate)
+  const rowHeads = makeRowHeads(rows.heads, rowContents)
   const displayRangeDateTimes = displayRange.map((unit) => {
     return startDate.add(unit, displayRangeUnit)
   })
