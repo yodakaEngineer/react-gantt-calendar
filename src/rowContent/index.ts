@@ -1,5 +1,5 @@
 import dayjs, { Dayjs } from 'dayjs'
-import produce from 'immer'
+import {produce} from 'immer'
 import { RowContent, RowHead } from '../types'
 import { isEventInDisplayRange } from './isEventInDisplayRange'
 

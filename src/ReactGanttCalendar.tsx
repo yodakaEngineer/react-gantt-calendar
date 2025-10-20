@@ -1,3 +1,5 @@
+'use client'
+
 import dayjs from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'

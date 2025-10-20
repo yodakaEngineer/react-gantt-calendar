@@ -21,7 +21,8 @@ export type EventLabelCallbackProps = {
 }
 
 export type Event = {
-  label: string | React.FC<EventLabelCallbackProps>
+  // label can be a string or a function that returns a React node(except Promise<React.ReactNode>).
+  label: string | ((props: EventLabelCallbackProps) => React.ReactNode)
   startAt: Date
   endAt: Date
 }
