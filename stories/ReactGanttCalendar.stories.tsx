@@ -1,5 +1,4 @@
 import React from 'react'
-import { ComponentStory } from '@storybook/react-vite'
 import { ReactGanttCalendar } from '../src/ReactGanttCalendar'
 import '../src/styles.scss'
 import dayjs from 'dayjs'
@@ -193,7 +192,7 @@ const args = {
   },
 }
 
-const Template: ComponentStory<typeof ReactGanttCalendar> = (args) => (
+const Template = (args: React.ComponentProps<typeof ReactGanttCalendar>) => (
   <div style={{ overflow: 'auto', width: '500px', height: '150px' }}>
     <ReactGanttCalendar {...args} />
   </div>
