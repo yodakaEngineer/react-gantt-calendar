@@ -1,5 +1,5 @@
 import React from 'react'
-import { ComponentStory } from '@storybook/react'
+import { ComponentStory } from '@storybook/react-vite'
 import { ReactGanttCalendar } from '../src/ReactGanttCalendar'
 import '../src/styles.scss'
 import dayjs from 'dayjs'
