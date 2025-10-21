@@ -1,6 +1,7 @@
 # react-gantt-calendar
 
 A flexible React component for rendering Gantt chart calendars with hierarchical row structures and customizable time ranges.
+**⚠️ This Package is in development stage. Breaking changes may be included in the release. ⚠️**
 
 ## Installation
 
