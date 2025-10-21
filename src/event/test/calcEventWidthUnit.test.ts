@@ -10,7 +10,7 @@ test('Even if the event is less than one unit from start to end, it is still con
     dayjs('2022-08-23T00:00:00'),
   ]
   expect(calcEventWidthUnit(start, end, 'day', 1, displayRangeDateTimes)).toBe(
-    1
+    1,
   )
 })
 
@@ -25,6 +25,6 @@ test('If the event is more than one unit from start to end, it is considered the
     dayjs('2022-08-24T00:00:00'),
   ]
   expect(calcEventWidthUnit(start, end, 'day', 1, displayRangeDateTimes)).toBe(
-    2
+    2,
   )
 })

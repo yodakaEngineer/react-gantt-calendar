@@ -9,10 +9,7 @@
     "sourceType": "module",
     "ecmaVersion": 6
   },
-  "plugins": [
-    "react",
-    "import"
-  ],
+  "plugins": ["react", "import"],
   "rules": {
     "import/order": [
       "warn",

@@ -10,20 +10,20 @@ module.exports = {
   addons: [
     '@storybook/addon-links',
     '@chromatic-com/storybook',
-    '@storybook/addon-docs'
+    '@storybook/addon-docs',
   ],
 
   framework: {
     name: '@storybook/react-vite',
 
     options: {
-      strictMode: true
-    }
+      strictMode: true,
+    },
   },
 
   async viteFinal(config, { configType }) {
     const { config: userConfig } = await loadConfigFromFile(
-      path.resolve(__dirname, '../vite.config.ts')
+      path.resolve(__dirname, '../vite.config.ts'),
     )
 
     return mergeConfig(config, {
@@ -36,6 +36,6 @@ module.exports = {
   docs: {},
 
   typescript: {
-    reactDocgen: 'react-docgen-typescript'
-  }
+    reactDocgen: 'react-docgen-typescript',
+  },
 }

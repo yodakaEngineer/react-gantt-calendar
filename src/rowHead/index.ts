@@ -9,7 +9,7 @@ export type FormattingRowHead = RowHeadProp &
 
 export const makeRowHeads = (
   rowHeads: RowHeadProp[],
-  rowContents: RowContent[]
+  rowContents: RowContent[],
 ): RowHead[] => {
   const draft = createDraft<FormattingRowHead[]>(rowHeads)
   draft.forEach((v) => {

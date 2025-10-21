@@ -8,13 +8,13 @@ export const isEventInDisplayRange =
       startDate,
       endDate,
       null,
-      '[)'
+      '[)',
     )
     const isDisplayRangeIncludeEnd = dayjs(event.endAt).isBetween(
       startDate,
       endDate,
       null,
-      '(]'
+      '(]',
     )
     const isEventRangeIncludeDisplayRange =
       dayjs(event.endAt).isSameOrAfter(endDate) &&

@@ -5,7 +5,7 @@ export const recursiveMakeTableRows = (
   content: RowContent,
   head: RowHead,
   renderedHeadIds: RowHead['id'][],
-  row: TableRow
+  row: TableRow,
 ) => {
   if (content.headIds.includes(head.id)) {
     if (!renderedHeadIds.includes(head.id)) {

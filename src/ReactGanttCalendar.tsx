@@ -20,14 +20,14 @@ export const ReactGanttCalendar = ({ options = {}, data }: Props) => {
   const displayRangeNumber = options.displayRange?.range ?? 30
   const displayRangeUnitNumber = options.displayRange?.unitNumber ?? 1
   const displayRange = [...Array(displayRangeNumber)].map(
-    (_, i) => i * displayRangeUnitNumber
+    (_, i) => i * displayRangeUnitNumber,
   )
   const displayRangeUnit = options.displayRange?.unit ?? 'day'
   const dateColumnFormat = options.displayRange?.format ?? 'MM/DD'
   const startDate = dayjs(options.startDate).startOf(displayRangeUnit)
   const endDate = startDate.add(
     displayRangeNumber * displayRangeUnitNumber,
-    displayRangeUnit
+    displayRangeUnit,
   )
   const tableDataWidth = options.tableCellWidth ?? 60
   const rowContents = makeRowContents(rows.contents, startDate, endDate)
@@ -40,19 +40,19 @@ export const ReactGanttCalendar = ({ options = {}, data }: Props) => {
     endDate,
     displayRangeUnit,
     displayRangeUnitNumber,
-    displayRangeDateTimes
+    displayRangeDateTimes,
   )
 
   const renderedHeadIds: RowHead['id'][] = []
   const tableRows: TableRow[] = makeTableRows(
     rowContents,
     rowHeads,
-    renderedHeadIds
+    renderedHeadIds,
   )
   const TableHeadLastIndexes = tableRows.map((row) => row.tableHeads.length - 1)
 
   const [eventHeightList, setHeightList] = useState<number[][]>(
-    tableRows.map(() => [])
+    tableRows.map(() => []),
   )
   const measureEventHeight = useCallback(
     (node: HTMLDivElement | null, rowIndex: number, eventIndex: number) => {
@@ -72,7 +72,7 @@ export const ReactGanttCalendar = ({ options = {}, data }: Props) => {
         })
       }
     },
-    [eventHeightList]
+    [eventHeightList],
   )
 
   const [tHeadHeightList, setTHeadHeightList] = useState<number[]>([])
@@ -93,7 +93,7 @@ export const ReactGanttCalendar = ({ options = {}, data }: Props) => {
         })
       }
     },
-    [tHeadHeightList, TableHeadLastIndexes]
+    [tHeadHeightList, TableHeadLastIndexes],
   )
 
   const calcHeight = useCallback(
@@ -102,7 +102,7 @@ export const ReactGanttCalendar = ({ options = {}, data }: Props) => {
       const isAutoCalcHeight = height === 0 || tHeadHeightList[index]! > height
       return isAutoCalcHeight ? undefined : height
     },
-    [eventHeightList, tHeadHeightList]
+    [eventHeightList, tHeadHeightList],
   )
 
   const eventStartPositions = tableRows.map((row) => {
@@ -114,7 +114,7 @@ export const ReactGanttCalendar = ({ options = {}, data }: Props) => {
           current,
           next,
           displayRangeUnit,
-          '[)'
+          '[)',
         )
       })
       return matchedRangeIndex == -1 ? 0 : matchedRangeIndex
@@ -184,7 +184,7 @@ export const ReactGanttCalendar = ({ options = {}, data }: Props) => {
           gridTemplateRows: `repeat(${
             tableRows.length
           }, fit-content: ${Math.max(
-            ...eventHeightList.map((v) => v.reduce((a, b) => a + b, 0))
+            ...eventHeightList.map((v) => v.reduce((a, b) => a + b, 0)),
           )})`,
           position: 'relative',
           width: 'fit-content',
@@ -235,7 +235,7 @@ export const ReactGanttCalendar = ({ options = {}, data }: Props) => {
                   position: 'absolute',
                   top: eventHeightList[rowIndex]!.slice(0, eventIndex).reduce(
                     (a, b) => a + b,
-                    0
+                    0,
                   ),
                   gridColumn: `${
                     eventStartPositions[rowIndex]![eventIndex]! +

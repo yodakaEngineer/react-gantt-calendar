@@ -9,20 +9,20 @@ export const calcEventWidth =
     endDate: Dayjs,
     displayRangeUnit: ManipulateType,
     displayRangeUnitNumber: number,
-    displayRangeDateTimes: Dayjs[]
+    displayRangeDateTimes: Dayjs[],
   ) =>
   (event: Event) => {
     const { start, end } = changeStartAndEnd(
       event,
       startDate,
       endDate,
-      displayRangeUnit
+      displayRangeUnit,
     )
     return calcEventWidthUnit(
       start,
       end,
       displayRangeUnit,
       displayRangeUnitNumber,
-      displayRangeDateTimes
+      displayRangeDateTimes,
     )
   }

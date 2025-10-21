@@ -5,7 +5,7 @@ export const calcEventWidthUnit = (
   end: Dayjs,
   displayRangeUnit: ManipulateType,
   displayRangeUnitNumber: number,
-  displayRangeDateTimes: Dayjs[]
+  displayRangeDateTimes: Dayjs[],
 ): number => {
   const rangeList = displayRangeDateTimes.map((range) => [
     range,
@@ -13,10 +13,10 @@ export const calcEventWidthUnit = (
   ])
 
   const startRange = rangeList.find(([rangeStart, rangeEnd]) =>
-    dayjs(start).isBetween(rangeStart, rangeEnd, null, '()')
+    dayjs(start).isBetween(rangeStart, rangeEnd, null, '()'),
   )
   const endRange = rangeList.find(([rangeStart, rangeEnd]) =>
-    dayjs(end).isBetween(rangeStart, rangeEnd, null, '()')
+    dayjs(end).isBetween(rangeStart, rangeEnd, null, '()'),
   )
 
   const newStart = startRange?.[0] ?? start

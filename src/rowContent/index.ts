@@ -1,5 +1,5 @@
 import dayjs, { Dayjs } from 'dayjs'
-import {produce} from 'immer'
+import { produce } from 'immer'
 import { RowContent, RowHead } from '../types'
 import { isEventInDisplayRange } from './isEventInDisplayRange'
 
@@ -8,7 +8,7 @@ export * from './types'
 export const makeRowContents = (
   rowContents: RowContent[],
   startDate: Dayjs,
-  endDate: Dayjs
+  endDate: Dayjs,
 ): RowContent[] => {
   const filter = isEventInDisplayRange(startDate, endDate)
   return produce(rowContents, (draft) => {
@@ -16,7 +16,7 @@ export const makeRowContents = (
       content.events = content.events
         .filter(filter)
         .sort((prevEvent, currentEvent) =>
-          dayjs(prevEvent.startAt).diff(currentEvent.startAt)
+          dayjs(prevEvent.startAt).diff(currentEvent.startAt),
         )
       const headIds: RowHead['id'][] = []
       content.headIds.forEach((v, i) => {

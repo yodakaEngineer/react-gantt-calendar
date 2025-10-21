@@ -5,7 +5,7 @@ import { recursiveMakeTableRows } from './recursiveMakeTableRows'
 export const makeTableRows = (
   rowContents: RowContent[],
   rowHeads: RowHead[],
-  renderedHeadIds: RowHead['id'][]
+  renderedHeadIds: RowHead['id'][],
 ): TableRow[] => {
   return rowContents.map((content) => {
     const row: TableRow = {
