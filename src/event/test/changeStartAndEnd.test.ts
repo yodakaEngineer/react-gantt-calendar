@@ -1,5 +1,5 @@
 import dayjs, { ManipulateType } from 'dayjs'
-import { Event } from '../../../types'
+import { Event } from '../../types'
 import { changeStartAndEnd } from '../changeStartAndEnd'
 
 test('If the event is within the display period, returns the start and end of the event as is.', () => {
@@ -26,7 +26,7 @@ test.each<
     eventStart: Date,
     eventEnd: Date,
     displayRangeUnit: ManipulateType,
-    exptected: ReturnType<typeof changeStartAndEnd>
+    exptected: ReturnType<typeof changeStartAndEnd>,
   ]
 >([
   [
@@ -69,7 +69,7 @@ test.each<
     eventStart: Date,
     eventEnd: Date,
     displayRangeUnit: ManipulateType,
-    exptected: ReturnType<typeof changeStartAndEnd>
+    exptected: ReturnType<typeof changeStartAndEnd>,
   ]
 >([
   [
@@ -105,7 +105,7 @@ test.each<
     }
 
     expect(changeStartAndEnd(event, start, end, unit)).toEqual(expected)
-  }
+  },
 )
 
 test.each<
@@ -115,7 +115,7 @@ test.each<
     eventStart: Date,
     eventEnd: Date,
     displayRangeUnit: ManipulateType,
-    exptected: ReturnType<typeof changeStartAndEnd>
+    exptected: ReturnType<typeof changeStartAndEnd>,
   ]
 >([
   [
@@ -151,5 +151,5 @@ test.each<
     }
 
     expect(changeStartAndEnd(event, start, end, unit)).toEqual(expected)
-  }
+  },
 )

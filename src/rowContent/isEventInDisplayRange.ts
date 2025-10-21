@@ -1,5 +1,5 @@
 import dayjs, { Dayjs } from 'dayjs'
-import { Event } from '../../types'
+import { Event } from '../types'
 
 export const isEventInDisplayRange =
   (startDate: Dayjs, endDate: Dayjs) =>
@@ -8,13 +8,13 @@ export const isEventInDisplayRange =
       startDate,
       endDate,
       null,
-      '[)'
+      '[)',
     )
     const isDisplayRangeIncludeEnd = dayjs(event.endAt).isBetween(
       startDate,
       endDate,
       null,
-      '(]'
+      '(]',
     )
     const isEventRangeIncludeDisplayRange =
       dayjs(event.endAt).isSameOrAfter(endDate) &&

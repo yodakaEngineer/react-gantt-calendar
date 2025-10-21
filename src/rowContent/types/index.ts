@@ -1,4 +1,4 @@
-import { RowContent, RowHead } from '../../../types'
+import { RowContent, RowHead } from '../../types'
 
 export type TableRow = {
   tableHeads: RowHead[]
