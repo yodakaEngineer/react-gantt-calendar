@@ -163,7 +163,7 @@ export const ReactGanttCalendar = ({ options = {}, data }: Props) => {
         {displayRangeDateTimes.map((date) => {
           return (
             <div
-              key={'RTLDR_' + date.format('HH:mm')}
+              key={'RTLDR_' + date.toISOString()}
               className={'RTLTheadTr__td'}
               style={{
                 width: tableDataWidth,
